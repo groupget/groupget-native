@@ -6,21 +6,6 @@ import TabBarIcon from '../common/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
-import WelcomeScreen from '../screens/WelcomeScreen';
-
-const WelcomeStack = createStackNavigator({
-    Welcome: WelcomeScreen,
-});
-
-WelcomeStack.navigationOptions = {
-    tabBarLabel: 'Welcome',
-    tabBarIcon : ({ focused }) => (
-        <TabBarIcon
-            focused={ focused }
-            name={ Platform.OS === 'ios' ? 'ios-options' : 'md-options' }
-        />
-    ),
-};
 
 const HomeStack = createStackNavigator({
     Home: HomeScreen,
@@ -38,6 +23,7 @@ HomeStack.navigationOptions = {
             }
         />
     ),
+    header: null,
 };
 
 const LinksStack = createStackNavigator({
@@ -69,7 +55,6 @@ SettingsStack.navigationOptions = {
 };
 
 export default createBottomTabNavigator({
-    WelcomeStack,
     HomeStack,
     LinksStack,
     SettingsStack,

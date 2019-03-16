@@ -1,15 +1,22 @@
-import { Platform, StatusBar, View } from 'react-native';
+import React, { Component } from 'react';
+import { Platform, StatusBar, View, StyleSheet } from 'react-native';
 import AppNavigator from '../navigation/AppNavigator';
+import MainTabNavigator from '../navigation/MainTabNavigator';
 
 class AfterWelcomeScreen extends Component {
+    static router = MainTabNavigator.router;
     render() {
         return (
-            <View style={styles.container}>
-                {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-                <AppNavigator />
-            </View>
+            <MainTabNavigator navigation={this.props.navigation}/>
         );
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex           : 1,
+        backgroundColor: '#fff',
+    },
+});
 
 export default AfterWelcomeScreen;
