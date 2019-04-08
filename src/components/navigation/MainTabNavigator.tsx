@@ -1,6 +1,6 @@
 import React from 'react';
-import { Platform } from 'react-native';
-import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
+import {Platform} from 'react-native';
+import {createStackNavigator, createBottomTabNavigator} from 'react-navigation';
 
 import TabBarIcon from '../common/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
@@ -13,12 +13,12 @@ const HomeStack = createStackNavigator({
 
 HomeStack.navigationOptions = {
     tabBarLabel: 'Home',
-    tabBarIcon : ({ focused }) => (
+    tabBarIcon: ({focused}: { focused: boolean }) => (
         <TabBarIcon
-            focused={ focused }
+            focused={focused}
             name={
                 Platform.OS === 'ios'
-                    ? `ios-information-circle${ focused ? '' : '-outline' }`
+                    ? `ios-information-circle${focused ? '' : '-outline'}`
                     : 'md-information-circle'
             }
         />
@@ -32,10 +32,10 @@ const LinksStack = createStackNavigator({
 
 LinksStack.navigationOptions = {
     tabBarLabel: 'Links',
-    tabBarIcon : ({ focused }) => (
+    tabBarIcon: ({focused}: { focused: boolean }) => (
         <TabBarIcon
-            focused={ focused }
-            name={ Platform.OS === 'ios' ? 'ios-link' : 'md-link' }
+            focused={focused}
+            name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'}
         />
     ),
 };
@@ -46,10 +46,10 @@ const SettingsStack = createStackNavigator({
 
 SettingsStack.navigationOptions = {
     tabBarLabel: 'Settings',
-    tabBarIcon : ({ focused }) => (
+    tabBarIcon: ({focused}: { focused: boolean }) => (
         <TabBarIcon
-            focused={ focused }
-            name={ Platform.OS === 'ios' ? 'ios-options' : 'md-options' }
+            focused={focused}
+            name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
         />
     ),
 };

@@ -8,6 +8,11 @@ export const MyContext = React.createContext({
     name: 'Test',
 });
 
+export type Value = {
+    name: string;
+    setName: (val: string) => void;
+}
+
 export type AppProps = {
     skipLoadingScreen?: boolean;
 }
