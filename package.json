@@ -5,23 +5,46 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "eject": "expo eject",
-    "test": "node ./node_modules/jest/bin/jest.js --watchAll"
+    "test": "node ./node_modules/jest/bin/jest.js --watchAll",
+    "lint": "tslint src/**/*.ts?",
+    "tsc": "tsc",
+    "clean": "rimraf build",
+    "build": "yarn run clean && yarn run tsc --",
+    "watch": "yarn run build -- -w",
+    "watchAndRunAndroid": "concurrently \"yarn run watch\" \"yarn run android\"",
+    "buildRunAndroid": "yarn run build && yarn run watchAndRunAndroid ",
+    "watchAndRunIOS": "concurrently \"yarn run watch\" \"yarn run ios\"",
+    "buildRunIOS": "yarn run build && yarn run watchAndRunIOS ",
+    "watchAndStart": "concurrently \"yarn run watch\" \"yarn run start\"",
+    "buildAndStart": "yarn run build && yarn run watchAndStart "
   },
   "jest": {
     "preset": "jest-expo"
   },
   "dependencies": {
     "@expo/samples": "2.1.1",
+    "@types/expo": "^32.0.10",
+    "@types/react-navigation": "^3.0.6",
     "expo": "^32.0.0",
     "native-base": "^2.12.1",
+    "prop-types": "latest",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
-    "react-navigation": "^3.0.9",
-    "prop-types": "latest"
+    "react-navigation": "^3.0.9"
   },
   "devDependencies": {
+    "@types/jest": "^24.0.11",
+    "@types/react": "^16.8.12",
+    "@types/react-dom": "^16.8.3",
+    "@types/react-native": "^0.57.42",
+    "@types/react-test-renderer": "^16.8.1",
     "babel-preset-expo": "^5.0.0",
-    "jest-expo": "^32.0.0"
+    "concurrently": "^4.1.0",
+    "jest-expo": "^32.0.0",
+    "rimraf": "^2.6.3",
+    "ts-jest": "^24.0.2",
+    "tslint": "^5.15.0",
+    "typescript": "^3.4.2"
   },
   "private": true
 }
