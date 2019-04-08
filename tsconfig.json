@@ -33,6 +33,7 @@
     "node_modules",
     "jest.config.js",
     "babel.config.js",
+    "coverage",
     "src/App"
 
   ],
