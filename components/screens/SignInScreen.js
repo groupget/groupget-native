@@ -15,7 +15,7 @@ class SignInScreen extends Component {
     };
 
     componentDidMount() {
-        // this.props.navigation.replace('Home'); //todo do it when user is already logged in
+        // this.props.navigation.replace('Groups'); //todo do it when user is already logged in
     }
 
     render() {

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Platform, StatusBar, View, StyleSheet } from 'react-native';
-import AppNavigator from '../navigation/AppNavigator';
 import MainTabNavigator from '../navigation/MainTabNavigator';
 
 class AfterWelcomeScreen extends Component {

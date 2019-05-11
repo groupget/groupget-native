@@ -12,7 +12,7 @@ import { WebBrowser } from 'expo';
 
 import { MonoText } from '../common/StyledText';
 
-export default class HomeScreen extends React.Component {
+export default class GroupsScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };

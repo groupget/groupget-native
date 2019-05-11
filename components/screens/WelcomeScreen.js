@@ -35,7 +35,7 @@ class WelcomeScreen extends Component {
 
     _handleStart = () => {
         const { navigation } = this.props;
-        navigation.replace('Home');
+        navigation.replace('Groups');
     };
 }
 

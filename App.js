@@ -26,7 +26,7 @@ const AppNavigator = createStackNavigator({
             header: null,
         },
     },
-    Home: {
+    Groups: {
         screen: AfterWelcomeScreen,
         navigationOptions: {
             header: null,
