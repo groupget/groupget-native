@@ -1,0 +1,5 @@
+.watchmanconfig
+.expo/
+build/
+.gitignore
+yarn-error.log

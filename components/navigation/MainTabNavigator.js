@@ -4,7 +4,7 @@ import { createStackNavigator, createBottomTabNavigator } from 'react-navigation
 
 import TabBarIcon from '../common/TabBarIcon';
 import GroupsScreen from '../screens/GroupsScreen';
-import LinksScreen from '../screens/LinksScreen';
+import AddExpenseScreen from '../screens/AddExpenseScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 
 const GroupsStack = createStackNavigator({
@@ -26,11 +26,11 @@ GroupsStack.navigationOptions = {
     header: null,
 };
 
-const LinksStack = createStackNavigator({
-    Links: LinksScreen,
+const AddExpenseStack = createStackNavigator({
+    AddExpense: AddExpenseScreen,
 });
 
-LinksStack.navigationOptions = {
+AddExpenseStack.navigationOptions = {
     tabBarLabel: 'Add',
     tabBarIcon : ({ focused }) => (
         <TabBarIcon
@@ -56,6 +56,6 @@ SettingsStack.navigationOptions = {
 
 export default createBottomTabNavigator({
     GroupsStack,
-    LinksStack,
+    AddExpenseStack,
     SettingsStack,
 });

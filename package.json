@@ -5,7 +5,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "eject": "expo eject",
-    "test": "node ./node_modules/jest/bin/jest.js --watchAll"
+    "test": "node ./node_modules/jest/bin/jest.js --watchAll",
+    "debug": "open 'rndebugger://set-debugger-loc?host=192.168.1.6&port=19001'"
   },
   "jest": {
     "preset": "jest-expo"
@@ -14,14 +15,15 @@
     "@expo/samples": "2.1.1",
     "expo": "^32.0.0",
     "native-base": "^2.12.1",
+    "prop-types": "latest",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
-    "react-navigation": "^3.0.9",
-    "prop-types": "latest"
+    "react-navigation": "^3.0.9"
   },
   "devDependencies": {
     "babel-preset-expo": "^5.0.0",
-    "jest-expo": "^32.0.0"
+    "jest-expo": "^32.0.0",
+    "redux-devtools-extension": "^2.13.8"
   },
   "private": true
 }
