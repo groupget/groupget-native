@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Platform, StatusBar, View, StyleSheet } from 'react-native';
 import MainTabNavigator from '../navigation/MainTabNavigator';
 
 class AfterWelcomeScreen extends Component {
@@ -10,12 +9,5 @@ class AfterWelcomeScreen extends Component {
         );
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex           : 1,
-        backgroundColor: '#fff',
-    },
-});
 
 export default AfterWelcomeScreen;
