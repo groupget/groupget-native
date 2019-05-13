@@ -1,5 +1,5 @@
 .watchmanconfig
-.expo/
+.expo/*
 build/
 .gitignore
 yarn-error.log
