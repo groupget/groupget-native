@@ -41,9 +41,9 @@ export default class MembersTab extends Component {
         const { active } = this.state;
 
         return (
-            <Container>
+            <Container style={ styles.container }>
                 <View style={ { flex: 1 } }>
-                    <List style={ styles.container }>
+                    <List>
                         {
                             members.map((member, key) => <ListItem
                                 key={ key }
@@ -93,7 +93,6 @@ export default class MembersTab extends Component {
 const styles = StyleSheet.create({
     container: {
         flex           : 1,
-        paddingTop     : 15,
         backgroundColor: '#fff',
     },
 });

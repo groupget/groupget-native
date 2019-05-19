@@ -17,23 +17,39 @@ export default class GroupView extends React.Component {
                     <Header searchBar rounded>
                         <Item>
                             <Icon name='search' style={ { marginLeft: 10, marginTop: 2 } }/>
-                            <Input placeholder='Search' style={{fontSize: 14}}/>
+                            <Input placeholder='Search' style={ { fontSize: 14 } }/>
                         </Item>
                         <Button transparent onPress={ undefined } title={ 'Search' }>
                             <Text>Search</Text>
                         </Button>
                     </Header>
-                    <Tabs tabContainerStyle={ styles.tabContainer }>
-                        <Tab heading={ <TabHeading><Text>MEMBERS</Text></TabHeading> }>
+                    <Tabs>
+                        <Tab heading='MEMBERS'
+                             tabStyle={ styles.tabContainer }
+                             activeTabStyle={ styles.activeTab }
+                             activeTextStyle={ styles.activeTab }
+                        >
                             <MembersTab/>
                         </Tab>
-                        <Tab heading={ <TabHeading><Text>LISTS</Text></TabHeading> }>
+                        <Tab heading='LISTS'
+                             tabStyle={ styles.tabContainer }
+                             activeTabStyle={ styles.activeTab }
+                             activeTextStyle={ styles.activeTab }
+                        >
                             <ListsTab/>
                         </Tab>
-                        <Tab heading={ <TabHeading><Text>EXPENSES</Text></TabHeading> }>
+                        <Tab heading='EXPENSES'
+                             tabStyle={ styles.tabContainer }
+                             activeTabStyle={ styles.activeTab }
+                             activeTextStyle={ styles.activeTab }
+                        >
                             <ExpensesTab/>
                         </Tab>
-                        <Tab heading={ <TabHeading><Text>ACTIVITY</Text></TabHeading> }>
+                        <Tab heading='ACTIVITY'
+                             tabStyle={ styles.tabContainer }
+                             activeTabStyle={ styles.activeTab }
+                             activeTextStyle={ styles.activeTab }
+                        >
                             <ActivityTab/>
                         </Tab>
                     </Tabs>
@@ -50,6 +66,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     tabContainer: {
-        backgroundColor: '#f2f2f2',
-    }
+        backgroundColor: '#ffffff',
+    },
+    activeTab   : {
+        fontWeight     : 'normal',
+        color          : '#000',
+        backgroundColor: '#ffffff'
+    },
 });
