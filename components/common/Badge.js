@@ -6,32 +6,42 @@ import Colors from '../../constants/Colors';
 
 const Badge = (props) => {
 
-    const { text, type } = props;
+    const { text, type, style } = props;
 
     return (
-        <NativeBadge warning={ type === 'warning' }
-                     primary={ type === 'primary' }
-                     success={ type === 'success' }
+        <NativeBadge warning={ type === 'minus' }
+                     primary={ type === 'zero' }
+                     success={ type === 'plus' }
+                     style={ {
+                         ...style,
+                         width : 65,
+                         height: 32,
+                         borderRadius: 12,
+                         display: 'flex',
+                         justifyContent: 'center',
+                         alignItems: 'center'
+                     } }
         >
             <Text style={ {
                 fontSize: 16,
                 color   : Colors.blackText,
             } }
             >
-                { text }
+                { text.toFixed(2) }
             </Text>
         </NativeBadge>
     );
 };
 
 Badge.propTypes = {
-    text: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['primary', 'warning', 'success']).isRequired,
+    text : PropTypes.number.isRequired,
+    type : PropTypes.oneOf(['plus', 'minus', 'zero']).isRequired,
+    style: PropTypes.object,
 };
 
 Badge.defaultProps = {
     disabled: false,
-    type    : 'primary',
+    type    : 'zero',
 };
 
 export default Badge;

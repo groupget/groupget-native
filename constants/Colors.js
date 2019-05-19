@@ -14,5 +14,7 @@ export default {
     inputBackground  : '#f0f0f0',
     primaryColor     : '#0099ff',
     whiteText        : '#fff',
+    grayLightest     : '#f2f2f2',
     blackText        : '#000',
+    defaultIcon      : '#595959',
 };

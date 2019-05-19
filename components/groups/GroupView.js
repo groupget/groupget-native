@@ -1,14 +1,14 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Header, Item, Container, Icon, Input, Button, Text, Tab, Tabs, TabHeading } from 'native-base';
+import { Header, Item, Container, Input, Button, Text, Tab, Tabs, TabHeading } from 'native-base';
 import MembersTab from './MembersTab';
 import ListsTab from './ListsTab';
 import ExpensesTab from './ExpensesTab';
 import ActivityTab from './ActivityTab';
+import Icon from '../common/Icon';
 
 export default class GroupView extends React.Component {
     static navigationOptions = {};
-
 
     render() {
         return (
@@ -16,9 +16,8 @@ export default class GroupView extends React.Component {
                 <Container>
                     <Header searchBar rounded>
                         <Item>
-                            <Icon name='ios-search'/>
-                            <Input placeholder='Search'/>
-                            <Icon name='ios-people'/>
+                            <Icon name='search' style={ { marginLeft: 10, marginTop: 2 } }/>
+                            <Input placeholder='Search' style={{fontSize: 14}}/>
                         </Item>
                         <Button transparent onPress={ undefined } title={ 'Search' }>
                             <Text>Search</Text>

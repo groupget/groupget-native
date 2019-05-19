@@ -1,6 +1,8 @@
 import React from 'react';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import { createAppContainer, createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
+import { Root } from 'native-base';
+
 import SignInScreen from './components/screens/SignInScreen';
 import SignUpScreen from './components/screens/SignUpScreen';
 import WelcomeScreen from './components/screens/WelcomeScreen';
@@ -8,26 +10,26 @@ import AfterWelcomeScreen from './components/screens/AfterWelcomeScreen';
 
 
 const AppNavigator = createStackNavigator({
-    SignIn: {
-        screen: SignInScreen,
+    SignIn : {
+        screen           : SignInScreen,
         navigationOptions: {
             header: null,
         },
     },
-    SignUp: {
-        screen: SignUpScreen,
+    SignUp : {
+        screen           : SignUpScreen,
         navigationOptions: {
             header: null,
         },
     },
     Welcome: {
-        screen: WelcomeScreen,
+        screen           : WelcomeScreen,
         navigationOptions: {
             header: null,
         },
     },
-    Groups: {
-        screen: AfterWelcomeScreen,
+    Groups : {
+        screen           : AfterWelcomeScreen,
         navigationOptions: {
             header: null,
         },
@@ -44,12 +46,12 @@ export const MyContext = React.createContext({
 
 class App extends React.Component {
     state = {
-        name: 'unset name',
+        name             : 'unset name',
         isLoadingComplete: false,
     };
 
     setName = newName => {
-        this.setState({name: newName});
+        this.setState({ name: newName });
     };
 
     componentDidMount() {
@@ -75,6 +77,7 @@ class App extends React.Component {
     _handleFinishLoading = () => {
         this.setState({ isLoadingComplete: true });
     };
+
     render() {
         if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
             return (
@@ -86,15 +89,16 @@ class App extends React.Component {
             );
         } else {
             return (
-
-                <MyContext.Provider
-                    value={{
-                        name: this.state.name,
-                        setName: this.setName,
-                    }}
-                >
-                    <AppContainer/>
-                </MyContext.Provider>
+                <Root>
+                    <MyContext.Provider
+                        value={ {
+                            name   : this.state.name,
+                            setName: this.setName,
+                        } }
+                    >
+                        <AppContainer/>
+                    </MyContext.Provider>
+                </Root>
             );
         }
     }

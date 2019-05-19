@@ -1,11 +1,11 @@
 import React from 'react';
-import { Platform } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
-import TabBarIcon from '../common/TabBarIcon';
 import GroupsScreen from '../screens/GroupsScreen';
 import AddExpenseScreen from '../screens/AddExpenseScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import TabIcon from '../common/TabIcon';
+
 
 const GroupsStack = createStackNavigator({
     Home: GroupsScreen,
@@ -14,16 +14,11 @@ const GroupsStack = createStackNavigator({
 GroupsStack.navigationOptions = {
     tabBarLabel: 'Groups',
     tabBarIcon : ({ focused }) => (
-        <TabBarIcon
-            focused={ focused }
-            name={
-                Platform.OS === 'ios'
-                    ? `ios-contacts`
-                    : 'md-contacts'
-            }
+        <TabIcon focused={ focused }
+              name={ 'contacts' }
         />
     ),
-    header: null,
+    header     : null,
 };
 
 const AddExpenseStack = createStackNavigator({
@@ -33,9 +28,8 @@ const AddExpenseStack = createStackNavigator({
 AddExpenseStack.navigationOptions = {
     tabBarLabel: 'Add',
     tabBarIcon : ({ focused }) => (
-        <TabBarIcon
-            focused={ focused }
-            name={ Platform.OS === 'ios' ? 'ios-add-circle' : 'md-add-circle' }
+        <TabIcon focused={ focused }
+              name={ 'add-circle' }
         />
     ),
 };
@@ -47,9 +41,8 @@ const SettingsStack = createStackNavigator({
 SettingsStack.navigationOptions = {
     tabBarLabel: 'Account',
     tabBarIcon : ({ focused }) => (
-        <TabBarIcon
-            focused={ focused }
-            name={ Platform.OS === 'ios' ? 'ios-options' : 'md-options' }
+        <TabIcon focused={ focused }
+              name={ 'options' }
         />
     ),
 };
