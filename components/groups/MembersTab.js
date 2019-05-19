@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Modal } from 'react-native';
 import { Container, List, Button, Fab, ActionSheet } from 'native-base';
 
 import ListItem from '../common/ListItem';
 import Icon from '../common/Icon';
+import Colors from '../../constants/Colors';
 
 
 const members = [
@@ -61,13 +62,13 @@ export default class MembersTab extends Component {
                             />)
                         }
                     </List>
-                    <Fab
-                        active={ active }
-                        direction='up'
-                        containerStyle={ {} }
-                        style={ { backgroundColor: '#5067FF' } }
-                        position='bottomRight'
-                        onPress={ () => this.setState({ active: !active }) }>
+                    <Fab active={ active }
+                         direction='up'
+                         containerStyle={ {} }
+                         style={ { backgroundColor: Colors.primaryColor } }
+                         position='bottomRight'
+                         onPress={ () => this.setState({ active: !active }) }
+                    >
                         <Icon name='add'/>
                     </Fab>
                 </View>

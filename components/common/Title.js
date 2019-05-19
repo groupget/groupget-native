@@ -8,8 +8,8 @@ const Title = (props) => {
     function generateFontSize(size) {
         switch(size) {
             case 'small': return 16;
-            case 'medium': return 20;
-            case 'large': return 28;
+            case 'medium': return 24;
+            case 'large': return 32;
         }
     }
 

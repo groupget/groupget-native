@@ -9,14 +9,14 @@ export default class Icon extends React.Component {
 
     render() {
 
-        const { style, color } = this.props;
+        const { style, color, size } = this.props;
 
         return (
             <ExpoIcon.Ionicons
                 name={ this._generateIconName() }
-                size={ 26 }
+                size={ size }
                 style={ { ...style } }
-                color={color}
+                color={ color }
             />
         );
     }
@@ -33,8 +33,10 @@ Icon.propTypes = {
     name : PropTypes.string.isRequired,
     style: PropTypes.object,
     color: PropTypes.string,
+    size : PropTypes.number,
 };
 
 Icon.defaultProps = {
     color: Colors.defaultIcon,
+    size : 26,
 };
