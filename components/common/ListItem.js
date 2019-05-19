@@ -9,13 +9,15 @@ import Icon from './Icon';
 
 const ListItem = (props) => {
 
-    const { icon, iconStyle, content, checkbox, owner, price, priceType, menu } = props;
+    const { icon, iconStyle, content, checkbox, owner, price, priceType, menu, onPress } = props;
 
     return (
         <NativeListItem style={ {
             display   : 'flex',
             alignItems: 'center',
-        } }>
+        } }
+                        onPress={ onPress }
+        >
             {
                 checkbox && <CheckBox checked={ checkbox.checked }
                                       color={ 'grey' }
@@ -42,7 +44,8 @@ ListItem.propTypes = {
     menu     : PropTypes.object,
     owner    : PropTypes.string,
     price    : PropTypes.number,
-    priceType: PropTypes.oneOf(['plus', 'minus', 'zero']).isRequired,
+    priceType: PropTypes.oneOf(['plus', 'minus', 'zero']),
+    onPress  : PropTypes.func,
 };
 
 ListItem.defaultProps = {};
@@ -57,7 +60,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.grayLightest,
     },
     marginRight: {
-        marginRight: 5
+        marginRight: 10
     },
     badge      : {
         marginTop: 4
