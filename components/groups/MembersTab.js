@@ -83,7 +83,7 @@ export default class MembersTab extends Component {
                         <Container style={ { display: 'flex', justifyContent: 'center' } }>
 
                             <View>
-                                <Title text={ 'Send invitation to group' }/>
+                                <Title text={ 'Send Invitation to Group' }/>
                                 <MarginContent>
                                     <Form>
                                         <TextInput onChange={ this._handleInputChange('email') }
