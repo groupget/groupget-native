@@ -15,6 +15,7 @@ const ListItem = (props) => {
         <NativeListItem style={ {
             display   : 'flex',
             alignItems: 'center',
+            height    : 75,
         } }
                         onPress={ onPress }
         >

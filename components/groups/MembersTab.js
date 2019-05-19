@@ -6,6 +6,7 @@ import FormButton from '../common/Button'
 import ListItem from '../common/ListItem';
 import Icon from '../common/Icon';
 import Colors from '../../constants/Colors';
+import ActivitiesIcons from '../../constants/ActivitiesIcons';
 import MarginContent from '../common/MarginContent';
 import Title from '../common/Title';
 import TextInput from '../common/TextInput';
@@ -54,7 +55,7 @@ export default class MembersTab extends Component {
                             members.map((member, key) => <ListItem
                                 key={ key }
                                 content={ member.name }
-                                icon={ 'person' }
+                                icon={ ActivitiesIcons.user }
                                 price={ member.money }
                                 priceType={ member.status }
                                 menu={

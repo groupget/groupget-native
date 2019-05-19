@@ -9,6 +9,7 @@ import Colors from '../../constants/Colors';
 import MarginContent from '../common/MarginContent';
 import Title from '../common/Title';
 import TextInput from '../common/TextInput';
+import ActivitiesIcons from '../../constants/ActivitiesIcons';
 
 
 const expenses = [
@@ -53,7 +54,7 @@ export default class ExpensesTab extends Component {
                             expenses.map((expense, key) => <ListItem
                                 key={ key }
                                 content={ expense.name }
-                                icon={ 'card' }
+                                icon={ ActivitiesIcons.expense }
                                 owner={ expense.owner }
                                 price={ expense.money }
                                 priceType={ expense.status }

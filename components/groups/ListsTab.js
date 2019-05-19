@@ -9,6 +9,7 @@ import Colors from '../../constants/Colors';
 import MarginContent from '../common/MarginContent';
 import Title from '../common/Title';
 import TextInput from '../common/TextInput';
+import ActivitiesIcons from '../../constants/ActivitiesIcons';
 
 
 const lists = [
@@ -55,7 +56,7 @@ export default class ListsTab extends Component {
                                         <Icon name={ 'more' }/>
                                     </NativeButton>
                                 }
-                                icon={ 'clipboard' }
+                                icon={ ActivitiesIcons.list }
                                 iconStyle={ { color: list.status === 'active' ? '#f4aa42' : '#00cc00' } }
                             />)
                         }
