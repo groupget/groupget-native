@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { SafeAreaView, View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 
 import { MyContext } from '../../App';
 import Title from '../common/Title';
