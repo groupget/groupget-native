@@ -1,28 +1,42 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-} from 'react-native';
+import { StyleSheet, SafeAreaView } from 'react-native';
 
 import GroupView from '../groups/GroupView';
+import GroupsList from '../groups/GroupsList';
 
+//fixme set navigation option to return to groups list on left arrow click
 export default class GroupsScreen extends React.Component {
-  static navigationOptions = {
-    header: null,
-  };
+    static navigationOptions = {
+        header: null,
+    };
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <GroupView/>
-      </View>
-    );
-  }
+    state = {
+        selectedGroupIndex: -1
+    };
+
+    render() {
+
+        const { selectedGroupIndex } = this.state;
+
+        return (
+            <SafeAreaView style={ styles.container }>
+                {
+                    selectedGroupIndex >= 0 ?
+                        <GroupView/> :
+                        <GroupsList onGroupSelect={ this.onGroupSelect }/>
+                }
+            </SafeAreaView>
+        );
+    }
+
+    onGroupSelect = (index) => {
+        this.setState({ selectedGroupIndex: index })
+    }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  }
+    container: {
+        flex           : 1,
+        backgroundColor: '#fff',
+    }
 });

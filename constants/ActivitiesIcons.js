@@ -1,5 +1,6 @@
 export default {
     expense: 'card',
     list   : 'clipboard',
-    user   : 'person'
+    user   : 'person',
+    group  : 'people',
 };

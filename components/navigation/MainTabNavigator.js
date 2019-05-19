@@ -15,7 +15,7 @@ GroupsStack.navigationOptions = {
     tabBarLabel: 'Groups',
     tabBarIcon : ({ focused }) => (
         <TabIcon focused={ focused }
-              name={ 'contacts' }
+                 name={ 'contacts' }
         />
     ),
     header     : null,
@@ -29,7 +29,7 @@ AddExpenseStack.navigationOptions = {
     tabBarLabel: 'Add',
     tabBarIcon : ({ focused }) => (
         <TabIcon focused={ focused }
-              name={ 'add-circle' }
+                 name={ 'add-circle' }
         />
     ),
 };
@@ -42,7 +42,7 @@ SettingsStack.navigationOptions = {
     tabBarLabel: 'Account',
     tabBarIcon : ({ focused }) => (
         <TabIcon focused={ focused }
-              name={ 'options' }
+                 name={ 'options' }
         />
     ),
 };

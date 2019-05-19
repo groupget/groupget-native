@@ -12,49 +12,47 @@ export default class GroupView extends React.Component {
 
     render() {
         return (
-            <View style={ styles.container }>
-                <Container>
-                    <Header searchBar rounded>
-                        <Item>
-                            <Icon name='search' style={ { marginLeft: 10, marginTop: 2 } }/>
-                            <Input placeholder='Search' style={ { fontSize: 14 } }/>
-                        </Item>
-                        <Button transparent onPress={ undefined } title={ 'Search' }>
-                            <Text>Search</Text>
-                        </Button>
-                    </Header>
-                    <Tabs>
-                        <Tab heading='MEMBERS'
-                             tabStyle={ styles.tabContainer }
-                             activeTabStyle={ styles.activeTab }
-                             activeTextStyle={ styles.activeTab }
-                        >
-                            <MembersTab/>
-                        </Tab>
-                        <Tab heading='LISTS'
-                             tabStyle={ styles.tabContainer }
-                             activeTabStyle={ styles.activeTab }
-                             activeTextStyle={ styles.activeTab }
-                        >
-                            <ListsTab/>
-                        </Tab>
-                        <Tab heading='EXPENSES'
-                             tabStyle={ styles.tabContainer }
-                             activeTabStyle={ styles.activeTab }
-                             activeTextStyle={ styles.activeTab }
-                        >
-                            <ExpensesTab/>
-                        </Tab>
-                        <Tab heading='ACTIVITY'
-                             tabStyle={ styles.tabContainer }
-                             activeTabStyle={ styles.activeTab }
-                             activeTextStyle={ styles.activeTab }
-                        >
-                            <ActivityTab/>
-                        </Tab>
-                    </Tabs>
-                </Container>
-            </View>
+            <Container style={ styles.container }>
+                <Header searchBar rounded style={{paddingTop: 0, height: 30}}>
+                    <Item>
+                        <Icon name='search' style={ { marginLeft: 10, marginTop: 2 } }/>
+                        <Input placeholder='Search' style={ { fontSize: 14 } }/>
+                    </Item>
+                    <Button transparent onPress={ undefined } title={ 'Search' }>
+                        <Text>Search</Text>
+                    </Button>
+                </Header>
+                <Tabs>
+                    <Tab heading='MEMBERS'
+                         tabStyle={ styles.tabContainer }
+                         activeTabStyle={ styles.activeTab }
+                         activeTextStyle={ styles.activeTab }
+                    >
+                        <MembersTab/>
+                    </Tab>
+                    <Tab heading='LISTS'
+                         tabStyle={ styles.tabContainer }
+                         activeTabStyle={ styles.activeTab }
+                         activeTextStyle={ styles.activeTab }
+                    >
+                        <ListsTab/>
+                    </Tab>
+                    <Tab heading='EXPENSES'
+                         tabStyle={ styles.tabContainer }
+                         activeTabStyle={ styles.activeTab }
+                         activeTextStyle={ styles.activeTab }
+                    >
+                        <ExpensesTab/>
+                    </Tab>
+                    <Tab heading='ACTIVITY'
+                         tabStyle={ styles.tabContainer }
+                         activeTabStyle={ styles.activeTab }
+                         activeTextStyle={ styles.activeTab }
+                    >
+                        <ActivityTab/>
+                    </Tab>
+                </Tabs>
+            </Container>
         );
     }
 }
@@ -62,7 +60,6 @@ export default class GroupView extends React.Component {
 const styles = StyleSheet.create({
     container   : {
         flex           : 1,
-        paddingTop     : 15,
         backgroundColor: '#fff',
     },
     tabContainer: {
