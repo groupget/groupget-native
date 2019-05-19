@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Modal } from 'react-native';
-import { Container, List, Button, Fab, ActionSheet } from 'native-base';
+import { Container, List, Button, Fab, ActionSheet, Form } from 'native-base';
+import FormButton from '../common/Button'
 
 import ListItem from '../common/ListItem';
 import Icon from '../common/Icon';
 import Colors from '../../constants/Colors';
+import MarginContent from '../common/MarginContent';
+import Title from '../common/Title';
+import TextInput from '../common/TextInput';
 
 
 const members = [
@@ -34,12 +38,13 @@ export default class MembersTab extends Component {
 
     state = {
         active : false,
-        clicked: -1
+        clicked: -1,
+        email  : '',
     };
 
     render() {
 
-        const { active } = this.state;
+        const { active, email } = this.state;
 
         return (
             <Container style={ styles.container }>
@@ -67,10 +72,37 @@ export default class MembersTab extends Component {
                          containerStyle={ {} }
                          style={ { backgroundColor: Colors.primaryColor } }
                          position='bottomRight'
-                         onPress={ () => this.setState({ active: !active }) }
+                         onPress={ this._onFabPress }
                     >
                         <Icon name='add'/>
                     </Fab>
+                    <Modal animationType='slide'
+                           transparent={ false }
+                           visible={ active }
+                    >
+                        <Container style={ { display: 'flex', justifyContent: 'center' } }>
+
+                            <View>
+                                <Title text={ 'Send invitation to group' }/>
+                                <MarginContent>
+                                    <Form>
+                                        <TextInput onChange={ this._handleInputChange('email') }
+                                                   placeholder={ 'Email' }
+                                                   value={ email }
+                                        />
+                                        <FormButton onClick={ this._sendInvitation }
+                                                    text={ 'Send' }
+                                        />
+                                        <FormButton onClick={ this._onFabPress }
+                                                    text={ 'Done' }
+                                                    type={ 'secondary' }
+                                        />
+                                    </Form>
+                                </MarginContent>
+                            </View>
+
+                        </Container>
+                    </Modal>
                 </View>
             </Container>
         );
@@ -88,7 +120,22 @@ export default class MembersTab extends Component {
                 this.setState({ clicked: BUTTONS[buttonIndex] });
             }
         )
+    };
+
+    _onFabPress = () => {
+        const { active } = this.state;
+        this.setState({ active: !active, email: '' })
+    };
+
+    _handleInputChange = fieldName => text => {
+        this.setState({ [fieldName]: text })
+    };
+
+    _sendInvitation = () => {
+        const { active } = this.state;
+        this.setState({ active: !active, email: '' })
     }
+
 }
 
 const styles = StyleSheet.create({
