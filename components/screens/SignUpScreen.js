@@ -20,10 +20,10 @@ class SignUpScreen extends Component {
         const { firstName, lastName, email, password } = this.state;
 
         return (
-            <Container style={{display: 'flex', justifyContent: 'center'}}>
+            <Container style={ { display: 'flex', justifyContent: 'center' } }>
 
                 <View>
-                    <Title text={'Create an Account'}/>
+                    <Title text={ 'Create an Account' }/>
                     <MarginContent>
                         <Form>
                             <TextInput onChange={ this._handleInputChange('firstName') }
@@ -42,8 +42,7 @@ class SignUpScreen extends Component {
                                        placeholder={ 'Password' }
                                        value={ password }
                             />
-                            <Button onClick={ () => {
-                            } }
+                            <Button onClick={ this._onSignUp }
                                     text={ 'Sign Up' }
                             >
                             </Button>
@@ -57,6 +56,11 @@ class SignUpScreen extends Component {
     _handleInputChange = fieldName => text => {
         this.setState({ [fieldName]: text })
     };
+
+    _onSignUp = () => {
+        const data = { ...this.state };
+        this.props.navigation.navigate('SignIn');
+    }
 }
 
 export default SignUpScreen;

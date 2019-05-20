@@ -1,18 +1,19 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
 
-import GroupsList from '../groups/GroupsList';
+import GroupView from '../groups/GroupView';
 
-export default class GroupsScreen extends React.Component {
-    static navigationOptions = {
-        header: null,
+export default class GroupScreen extends React.Component {
+
+    state = {
+        selectedGroupIndex: -1
     };
 
     render() {
 
         return (
             <SafeAreaView style={ styles.container }>
-                        <GroupsList navigation={this.props.navigation}/>
+                <GroupView navigation={ this.props.navigation }/>
             </SafeAreaView>
         );
     }

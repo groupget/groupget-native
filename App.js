@@ -7,32 +7,40 @@ import SignInScreen from './components/screens/SignInScreen';
 import SignUpScreen from './components/screens/SignUpScreen';
 import WelcomeScreen from './components/screens/WelcomeScreen';
 import AfterWelcomeScreen from './components/screens/AfterWelcomeScreen';
+import ListItemsScreen from './components/screens/ListItemsScreen';
+import GroupScreen from './components/screens/GroupScreen';
 
 
 const AppNavigator = createStackNavigator({
-    SignIn : {
+    SignIn   : {
         screen           : SignInScreen,
         navigationOptions: {
             header: null,
         },
     },
-    SignUp : {
+    SignUp   : {
         screen           : SignUpScreen,
         navigationOptions: {
             header: null,
         },
     },
-    Welcome: {
+    Welcome  : {
         screen           : WelcomeScreen,
         navigationOptions: {
             header: null,
         },
     },
-    Groups : {
+    Groups   : {
         screen           : AfterWelcomeScreen,
         navigationOptions: {
             header: null,
         },
+    },
+    ListItems: {
+        screen: ListItemsScreen,
+    },
+    Group    : {
+        screen: GroupScreen,
     }
 }, {
     initialRouteName: 'SignIn',

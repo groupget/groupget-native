@@ -14,7 +14,7 @@ import TextInput from '../common/TextInput';
 
 const members = [
     {
-        name  : 'User1',
+        name  : 'You',
         money : 4.50,
         status: 'minus'
     },

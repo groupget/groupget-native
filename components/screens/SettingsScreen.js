@@ -41,7 +41,8 @@ export default class SettingsScreen extends React.Component {
                             </Left>
                         </CardItem>
                         <CardItem cardBody>
-                            <Image source={ { uri: 'Image URL' } } style={ { height: 200, width: null, flex: 1 } }/>
+
+                            {/*<Image source={ { uri: 'Image URL' } } style={ { height: 200, width: null, flex: 1 } }/>*/}
                         </CardItem>
                     </Card>
                     <MarginContent>

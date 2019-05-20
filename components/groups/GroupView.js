@@ -13,7 +13,7 @@ export default class GroupView extends React.Component {
     render() {
         return (
             <Container style={ styles.container }>
-                <Header searchBar rounded style={{paddingTop: 0, height: 30}}>
+                <Header searchBar rounded style={ { paddingTop: 0, height: 30 } }>
                     <Item>
                         <Icon name='search' style={ { marginLeft: 10, marginTop: 2 } }/>
                         <Input placeholder='Search' style={ { fontSize: 14 } }/>
@@ -35,7 +35,7 @@ export default class GroupView extends React.Component {
                          activeTabStyle={ styles.activeTab }
                          activeTextStyle={ styles.activeTab }
                     >
-                        <ListsTab/>
+                        <ListsTab navigation={ this.props.navigation }/>
                     </Tab>
                     <Tab heading='EXPENSES'
                          tabStyle={ styles.tabContainer }

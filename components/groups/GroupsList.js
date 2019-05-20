@@ -107,8 +107,8 @@ export default class GroupsList extends Component {
     }
 
     _onGroupPress = (group) => {
-        const { onGroupSelect } = this.props;
-        onGroupSelect(group.index)
+        this.props.navigation.push('Group');
+
     };
 
     _onMenuPress = (group) => {
@@ -140,10 +140,6 @@ export default class GroupsList extends Component {
     }
 
 }
-
-GroupsList.propTypes = {
-    onGroupSelect: PropTypes.func.isRequired,
-};
 
 const styles = StyleSheet.create({
     container: {
