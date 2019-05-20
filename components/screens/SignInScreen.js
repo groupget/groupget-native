@@ -46,13 +46,11 @@ class SignInScreen extends Component {
                                             navigation.replace('Welcome', { name: 'Irmina', age: 4 });
                                         } }
                                                 text={ 'Sign In' }
-                                        >
-                                        </Button>
+                                        />
                                         <Button onClick={ this._handleNeedAccountClick }
                                                 text={ 'Need an account?' }
                                                 type={ 'secondary' }
-                                        >
-                                        </Button>
+                                        />
                                     </Form>
                                 </MarginContent>
                             </View>

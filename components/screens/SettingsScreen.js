@@ -3,6 +3,7 @@ import { Image, Text, View } from 'react-native';
 import { Container, Header, Content, Card, CardItem, Left, Body, Switch } from 'native-base';
 import Icon from '../common/Icon';
 import MarginContent from '../common/MarginContent';
+import Button from '../common/Button';
 
 
 const account = {
@@ -42,7 +43,7 @@ export default class SettingsScreen extends React.Component {
                         </CardItem>
                         <CardItem cardBody>
 
-                            {/*<Image source={ { uri: 'Image URL' } } style={ { height: 200, width: null, flex: 1 } }/>*/}
+                            {/*<Image source={ { uri: 'Image URL' } } style={ { height: 200, width: null, flex: 1 } }/>*/ }
                         </CardItem>
                     </Card>
                     <MarginContent>
@@ -55,6 +56,10 @@ export default class SettingsScreen extends React.Component {
                                     onValueChange={ this._toggleNotifications }
                             />
                         </View>
+                        <Button onClick={ this._handleLogout }
+                                text={ 'Logout' }
+                                type={ 'secondary' }
+                        />
                     </MarginContent>
                 </Content>
             </Container>
@@ -64,5 +69,9 @@ export default class SettingsScreen extends React.Component {
     _toggleNotifications = () => {
         const { notifications } = this.state;
         this.setState({ notifications: !notifications })
-    }
+    };
+
+    _handleLogout = () => {
+        this.props.navigation.navigate('SignIn');
+    };
 }
