@@ -38,6 +38,7 @@ class SignInScreen extends Component {
                                         <TextInput onChange={ this._handleInputChange('password') }
                                                    placeholder={ 'Password' }
                                                    value={ password }
+                                                   secureTextEntry={ true }
                                         />
                                         <Button onClick={ () => {
                                             value.setName(this.state.email);

@@ -41,6 +41,7 @@ class SignUpScreen extends Component {
                             <TextInput onChange={ this._handleInputChange('password') }
                                        placeholder={ 'Password' }
                                        value={ password }
+                                       secureTextEntry={ true }
                             />
                             <Button onClick={ this._onSignUp }
                                     text={ 'Sign Up' }

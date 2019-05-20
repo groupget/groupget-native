@@ -5,10 +5,6 @@ import GroupView from '../groups/GroupView';
 
 export default class GroupScreen extends React.Component {
 
-    state = {
-        selectedGroupIndex: -1
-    };
-
     render() {
 
         return (

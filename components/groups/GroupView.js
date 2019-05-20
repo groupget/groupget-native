@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Header, Item, Container, Input, Button, Text, Tab, Tabs, TabHeading } from 'native-base';
+import { StyleSheet } from 'react-native';
+import { Header, Item, Container, Input, Button, Text, Tab, Tabs } from 'native-base';
 import MembersTab from './MembersTab';
 import ListsTab from './ListsTab';
 import ExpensesTab from './ExpensesTab';
@@ -8,12 +8,17 @@ import ActivityTab from './ActivityTab';
 import Icon from '../common/Icon';
 
 export default class GroupView extends React.Component {
-    static navigationOptions = {};
+    static navigationOptions = {
+        // header: null,
+    };
 
     render() {
         return (
             <Container style={ styles.container }>
                 <Header searchBar rounded style={ { paddingTop: 0, height: 30 } }>
+                    {/*<Item>*/}
+                        {/*<Icon name='arrow-back' onPress={ this.props.navigation.goBack() }/>*/}
+                    {/*</Item>*/}
                     <Item>
                         <Icon name='search' style={ { marginLeft: 10, marginTop: 2 } }/>
                         <Input placeholder='Search' style={ { fontSize: 14 } }/>

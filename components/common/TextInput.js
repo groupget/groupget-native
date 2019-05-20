@@ -4,7 +4,7 @@ import { TextInput as TextInputNative } from 'react-native';
 
 const TextInput = (props) => {
 
-    const { onChange, value, placeholder } = props;
+    const { onChange, value, placeholder, secureTextEntry } = props;
 
     return (
         <TextInputNative
@@ -20,15 +20,17 @@ const TextInput = (props) => {
             value={ value }
             placeholder={ placeholder }
             placeholderTextColor={ '#999' }
+            secureTextEntry={ secureTextEntry }
         />
     );
 };
 
 
 TextInput.propTypes = {
-    onChange   : PropTypes.func.isRequired,
-    value      : PropTypes.string.isRequired,
-    placeholder: PropTypes.string,
+    onChange       : PropTypes.func.isRequired,
+    value          : PropTypes.string.isRequired,
+    placeholder    : PropTypes.string,
+    secureTextEntry: PropTypes.bool,
 };
 
 export default TextInput;
