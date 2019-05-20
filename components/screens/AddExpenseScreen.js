@@ -10,7 +10,7 @@ import Button from '../common/Button';
 
 export default class AddExpenseScreen extends React.Component {
     static navigationOptions = {
-        title: 'AddExpense',
+        header: null
     };
 
     state = {
