@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView } from 'react-native';
+import { StyleSheet, SafeAreaView, Text } from 'react-native';
 
 import GroupsList from '../groups/GroupsList';
+import MarginContent from '../common/MarginContent';
 
 export default class GroupsScreen extends React.Component {
     static navigationOptions = {
@@ -12,7 +13,14 @@ export default class GroupsScreen extends React.Component {
 
         return (
             <SafeAreaView style={ styles.container }>
-                        <GroupsList navigation={this.props.navigation}/>
+                <MarginContent>
+                    <Text style={ {
+                        fontSize: 32
+                    } }>
+                        Groups
+                    </Text>
+                </MarginContent>
+                <GroupsList navigation={ this.props.navigation }/>
             </SafeAreaView>
         );
     }

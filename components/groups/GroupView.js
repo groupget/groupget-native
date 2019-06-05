@@ -9,24 +9,24 @@ import Icon from '../common/Icon';
 
 export default class GroupView extends React.Component {
     static navigationOptions = {
-        // header: null,
+        header: null,
     };
 
     render() {
         return (
             <Container style={ styles.container }>
-                <Header searchBar rounded style={ { paddingTop: 0, height: 30 } }>
+                {/*<Header searchBar rounded style={ { paddingTop: 0, height: 30 } }>*/}
+                    {/*/!*<Item>*!/*/}
+                        {/*/!*<Icon name='arrow-back' onPress={ this.props.navigation.goBack() }/>*!/*/}
+                    {/*/!*</Item>*!/*/}
                     {/*<Item>*/}
-                        {/*<Icon name='arrow-back' onPress={ this.props.navigation.goBack() }/>*/}
+                        {/*<Icon name='search' style={ { marginLeft: 10, marginTop: 2 } }/>*/}
+                        {/*<Input placeholder='Search' style={ { fontSize: 14 } }/>*/}
                     {/*</Item>*/}
-                    <Item>
-                        <Icon name='search' style={ { marginLeft: 10, marginTop: 2 } }/>
-                        <Input placeholder='Search' style={ { fontSize: 14 } }/>
-                    </Item>
-                    <Button transparent onPress={ undefined } title={ 'Search' }>
-                        <Text>Search</Text>
-                    </Button>
-                </Header>
+                    {/*<Button transparent onPress={ undefined } title={ 'Search' }>*/}
+                        {/*<Text>Search</Text>*/}
+                    {/*</Button>*/}
+                {/*</Header>*/}
                 <Tabs>
                     <Tab heading='MEMBERS'
                          tabStyle={ styles.tabContainer }
