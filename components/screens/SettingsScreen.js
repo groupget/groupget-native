@@ -29,7 +29,6 @@ export default class SettingsScreen extends React.Component {
         this._fetchUser();
     }
 
-
     render() {
 
         const { name, surname, email } = account;
@@ -50,7 +49,6 @@ export default class SettingsScreen extends React.Component {
                             </Left>
                         </CardItem>
                         <CardItem cardBody>
-
                             {/*<Image source={ { uri: 'Image URL' } } style={ { height: 200, width: null, flex: 1 } }/>*/ }
                         </CardItem>
                     </Card>
@@ -81,7 +79,7 @@ export default class SettingsScreen extends React.Component {
         };
         let userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
-        userPool.storage.sync(function (err, result) {
+        userPool.storage.sync((err, result) => {
             if (err) {
             } else if (result === 'SUCCESS') {
                 const cognitoUser = userPool.getCurrentUser();

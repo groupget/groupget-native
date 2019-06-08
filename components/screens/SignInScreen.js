@@ -26,7 +26,26 @@ class SignInScreen extends Component {
     };
 
     componentDidMount() {
-        // this.props.navigation.replace('Groups'); //todo do it when user is already logged in
+        const {navigation} = this.props;
+        const poolData = {
+            UserPoolId: cognitoConfig.cognito.USER_POOL_ID,
+            ClientId  : cognitoConfig.cognito.APP_CLIENT_ID
+        };
+        const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+
+        userPool.storage.sync(function (err, result) {
+            if (err) {
+                console.log(err);
+            } else if (result === 'SUCCESS') {
+                const cognitoUser = userPool.getCurrentUser();
+                console.log('cognito user:', cognitoUser);
+                if (cognitoUser != null) {
+                    navigation.replace('Groups'); //todo do it when user is already logged in
+                }
+            } else {
+                console.log('result from fetch: ', result);
+            }
+        });
     }
 
     render() {
