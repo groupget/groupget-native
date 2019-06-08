@@ -129,7 +129,7 @@ class SignInScreen extends Component {
                 this.props.showSuccessMessage(LOGIN_SUCCESSFUL);
                 // this.props.showLoadingBlocker(false);
                 console.log(result);
-                registerFirebase();
+                // registerFirebase();
                 const { navigation } = this.props;
                 navigation.replace('Welcome', { name: result['cognito:username'], age: 4 });
             },
@@ -137,6 +137,7 @@ class SignInScreen extends Component {
                 // this.props.showLoadingBlocker(false);
                 this.props.showErrorMessage(err.message);
                 console.log(err);
+                alert(err.message);
             },
             newPasswordRequired: (userAttributes, requiredAttributes) => {
                 // this.props.showLoadingBlocker(false);
