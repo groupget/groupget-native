@@ -1,5 +1,5 @@
 import React from 'react';
-import { AsyncStorage } from 'react-native';
+// import { AsyncStorage } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import { createAppContainer, createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
 import { Root } from 'native-base';
@@ -57,7 +57,7 @@ export const MyContext = React.createContext({
 
 class App extends React.Component {
     state = {
-        name             : 'unset name',
+        name             : '',
         isLoadingComplete: false,
     };
 

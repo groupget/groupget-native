@@ -6,6 +6,7 @@ import Title from '../common/Title';
 import Button from '../common/Button';
 import MarginContent from '../common/MarginContent';
 import Icon from '../common/Icon';
+import rows from '../../constants/WelcomeRows';
 
 
 class WelcomeScreen extends Component {
@@ -41,7 +42,7 @@ class WelcomeScreen extends Component {
                                 />
 
                                 <Text style={ {
-                                    fontSize : 20,
+                                    fontSize : 24,
                                     width    : 300,
                                     textAlign: 'center',
                                     marginTop: 70
@@ -60,49 +61,12 @@ class WelcomeScreen extends Component {
                                     marginBottom  : 30,
                                 } }>
 
-                                    <View style={ styles.infoRow }>
-                                        <Icon name='card'
-                                              size={ 50 }
-                                              color='#ffcc00'
-                                              style={ styles.margin }
-                                        />
-                                        <Text style={ { fontSize: 24, color: '#000' } }>
-                                            Add Expenses
-                                        </Text>
-                                    </View>
-
-                                    <View style={ styles.infoRow }>
-                                        <Icon name='cart'
-                                              size={ 50 }
-                                              color='#1a8cff'
-                                              style={ styles.margin }
-                                        />
-                                        <Text style={ { fontSize: 24, color: '#000' } }>
-                                            Plan Shopping Lists
-                                        </Text>
-                                    </View>
-
-                                    <View style={ styles.infoRow }>
-                                        <Icon name='people'
-                                              size={ 50 }
-                                              color='#990099'
-                                              style={ styles.margin }
-                                        />
-                                        <Text style={ { fontSize: 24, color: '#000' } }>
-                                            Manage Groups
-                                        </Text>
-                                    </View>
-
-                                    <View style={ styles.infoRow }>
-                                        <Icon name='notifications'
-                                              size={ 50 }
-                                              color='#ff0066'
-                                              style={ styles.margin }
-                                        />
-                                        <Text style={ { fontSize: 24, color: '#000' } }>
-                                            Receive Notifications
-                                        </Text>
-                                    </View>
+                                    {
+                                        rows.map((rowData, key) => {
+                                            const { icon, color, text } = rowData;
+                                            return this._renderRow(icon, color, text, key)
+                                        })
+                                    }
 
                                 </View>
                                 <Button text={ 'Great, let\'s go!' }
@@ -116,6 +80,21 @@ class WelcomeScreen extends Component {
         );
     }
 
+    _renderRow = (icon, color, text, key) => {
+        return (
+            <View key={ key } style={ styles.infoRow }>
+                <Icon name={ icon }
+                      size={ 50 }
+                      color={ color }
+                      style={ styles.margin }
+                />
+                <Text style={ { fontSize: 24, color: '#000' } }>
+                    { text }
+                </Text>
+            </View>
+        )
+    };
+
     _handleStart = () => {
         const { navigation } = this.props;
         navigation.replace('Groups');
@@ -123,14 +102,20 @@ class WelcomeScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-    infoRow: {
+    infoRow : {
         display        : 'flex',
         flexDirection  : 'row',
         alignItems     : 'center',
         backgroundColor: '#fff',
+        alignSelf      : 'stretch',
         marginTop      : 20
     },
-    margin : {
+    infoCell: {
+        flex     : 1,
+        alignSelf: 'stretch',
+
+    },
+    margin  : {
         marginRight: 30,
     }
 });

@@ -131,7 +131,7 @@ class SignInScreen extends Component {
                 console.log(result);
                 // registerFirebase();
                 const { navigation } = this.props;
-                navigation.replace('Welcome', { name: result['cognito:username'], age: 4 });
+                navigation.replace('Welcome');
             },
             onFailure          : (err) => {
                 // this.props.showLoadingBlocker(false);
