@@ -9,4 +9,5 @@ export default {
         apiKey: "AIzaSyDHHItw7x0uxC1Umiq6N49VldDubHHx-b4",
         messagingSenderId: "667329276973"
     },
+    notificationServiceAddress: 'http://127.0.0.1:5000/',
 };

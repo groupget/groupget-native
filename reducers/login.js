@@ -1,12 +1,13 @@
 import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
 import getTokenFromLocalStorage from '../config/getTokenFromStorage';
+import {AsyncStorage} from 'react-native';
 
 export const LOGIN = '@logged/LOGIN';
 export const REFRESH = '@logged/REFRESH';
 export const LOGOUT = '@logged/LOGOUT';
 
 const initialState = {
-    logged: localStorage.getItem('logged'),
+    logged: AsyncStorage.getItem('logged'),
     cognitoUser: {}
 };
 
@@ -50,6 +51,6 @@ export const loginSuccess = cognitoUser => dispatch => {
 };
 
 export const logout = () => dispatch => {
-    localStorage.clear();
+    AsyncStorage.clear();
     dispatch({ type: LOGOUT })
 };

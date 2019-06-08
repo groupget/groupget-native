@@ -4,6 +4,8 @@ import { Container, Header, Content, Card, CardItem, Left, Body, Switch } from '
 import Icon from '../common/Icon';
 import MarginContent from '../common/MarginContent';
 import Button from '../common/Button';
+import cognitoConfig from '../../config/cognitoConfig';
+import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
 
 
 const account = {
@@ -19,8 +21,14 @@ export default class SettingsScreen extends React.Component {
     };
 
     state = {
-        notifications: account.notifications
+        notifications: account.notifications,
+        user         : null,
     };
+
+    componentDidMount() {
+        this._fetchUser();
+    }
+
 
     render() {
 
@@ -66,12 +74,29 @@ export default class SettingsScreen extends React.Component {
         )
     }
 
+    _fetchUser = () => {
+        const poolData = {
+            UserPoolId: cognitoConfig.cognito.USER_POOL_ID,
+            ClientId  : cognitoConfig.cognito.APP_CLIENT_ID
+        };
+        let userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+
+        userPool.storage.sync(function (err, result) {
+            if (err) {
+            } else if (result === 'SUCCESS') {
+                const cognitoUser = userPool.getCurrentUser();
+                this.setState({ user: cognitoUser });
+            }
+        });
+    };
+
     _toggleNotifications = () => {
         const { notifications } = this.state;
         this.setState({ notifications: !notifications })
     };
 
     _handleLogout = () => {
+        this.state.user.signOut();
         this.props.navigation.navigate('SignIn');
     };
 }

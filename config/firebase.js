@@ -1,8 +1,8 @@
+import {AsyncStorage} from 'react-native';
 import firebase from 'firebase';
 import axios from 'axios';
 import config from './cognitoConfig';
 import store from './store';
-import {GLOBAL_MESSAGE_SHOW} from './reducers/globalMessages';
 import {notifSend} from 'redux-notifications/src/actions';
 
 const FIREBASE_TOKEN_SENT = 'firebase_token_sent_to_server';
@@ -20,17 +20,17 @@ export function initFirebase() {
     firebase.initializeApp(config.firebase);
 }
 
-export function registerFirebase() {
+export async function registerFirebase() {
     const messaging = firebase.messaging();
 
     messaging.requestPermission().then(function () {
         return messaging.getToken();
     }).catch(function (err) {
         console.log('Unable to get permission to notify.', err);
-    }).then(function (currentToken) {
+    }).then(async function (currentToken) {
         if (currentToken) {
-            if (currentToken !== localStorage.getItem(FIREBASE_TOKEN_SENT)) {
-                localStorage.setItem(FIREBASE_TOKEN_SENT, currentToken);
+            if (currentToken !== await AsyncStorage.getItem(FIREBASE_TOKEN_SENT)) {
+                await AsyncStorage.setItem(FIREBASE_TOKEN_SENT, currentToken);
                 sendTokenToServer(currentToken);
             }
         } else {
@@ -41,10 +41,10 @@ export function registerFirebase() {
     });
 
     messaging.onTokenRefresh(function () {
-        messaging.getToken().then(function (refreshedToken) {
+        messaging.getToken().then(async function (refreshedToken) {
             if (refreshedToken) {
-                if (refreshedToken !== localStorage.getItem(FIREBASE_TOKEN_SENT)) {
-                    localStorage.setItem(FIREBASE_TOKEN_SENT, refreshedToken);
+                if (refreshedToken !== await AsyncStorage.getItem(FIREBASE_TOKEN_SENT)) {
+                    await AsyncStorage.setItem(FIREBASE_TOKEN_SENT, refreshedToken);
                     refreshTokenInServer(refreshedToken);
                 }
             } else {

@@ -1,9 +1,11 @@
 import { combineReducers } from 'redux';
-import login from './login';
 import { reducer as notifReducer } from 'redux-notifications';
+import login from './login';
+import messages from './messages';
 
 const appReducer = combineReducers({
     login,
+    messages,
     notifs: notifReducer,
 });
 

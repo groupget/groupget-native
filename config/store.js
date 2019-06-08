@@ -5,7 +5,7 @@ import rootReducer from '../reducers';
 
 const initialState = {};
 const enhancers = [];
-const middleware = [thunk, routerMiddleware(history)];
+const middleware = [thunk, routerMiddleware({})];
 
 const composedEnhancers = compose(
     applyMiddleware(...middleware),

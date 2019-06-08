@@ -12,15 +12,14 @@ import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
 class SignUpScreen extends Component {
 
     state = {
-        firstName: '',
-        lastName : '',
-        email    : '',
-        password : '',
-        error    : ''
+        username: '',
+        email   : '',
+        password: '',
+        error   : ''
     };
 
     render() {
-        const { firstName, lastName, email, password, error } = this.state;
+        const { username, email, password, error } = this.state;
 
         return (
             <Container style={ { display: 'flex', justifyContent: 'center' } }>
@@ -29,13 +28,9 @@ class SignUpScreen extends Component {
                     <Title text={ 'Create an Account' }/>
                     <MarginContent>
                         <Form>
-                            <TextInput onChange={ this._handleInputChange('firstName') }
-                                       placeholder={ 'First Name' }
-                                       value={ firstName }
-                            />
-                            <TextInput onChange={ this._handleInputChange('lastName') }
-                                       placeholder={ 'Last Name' }
-                                       value={ lastName }
+                            <TextInput onChange={ this._handleInputChange('username') }
+                                       placeholder={ 'Username' }
+                                       value={ username }
                             />
                             <TextInput onChange={ this._handleInputChange('email') }
                                        placeholder={ 'Email' }
@@ -84,14 +79,13 @@ class SignUpScreen extends Component {
     };
 
     _isFormValid = () => {
-        return this.state.firstName.length > 0 &&
-            this.state.lastName.length > 0 &&
+        return this.state.username.length > 0 &&
             this.state.email.length > 0 &&
             this.state.password.length > 0
     };
 
     _register() {
-        const { email, lastName, firstName, password } = this.state;
+        const { email, username, password } = this.state;
 
         const poolData = {
             UserPoolId: config.cognito.USER_POOL_ID,
@@ -102,22 +96,12 @@ class SignUpScreen extends Component {
             Name : 'email',
             Value: email
         };
-        const firstNameAttribute = {
-            Name : 'custom:firstName',
-            Value: firstName
-        };
-        const lastNameAttribute = {
-            Name : 'custom:lastName',
-            Value: lastName
-        };
         let userAttributes = [
             new AmazonCognitoIdentity.CognitoUserAttribute(emailAttribute),
-            new AmazonCognitoIdentity.CognitoUserAttribute(firstNameAttribute),
-            new AmazonCognitoIdentity.CognitoUserAttribute(lastNameAttribute),
         ];
 
         userPool.signUp(
-            email,
+            username,
             password,
             userAttributes,
             [],

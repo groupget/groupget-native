@@ -1,17 +1,28 @@
+import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
 import React, { Component } from 'react'
-import { View } from 'react-native'
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { Text, View } from 'react-native'
 import { Form, Container } from 'native-base'
-import Button from '../common/Button'
-import TextInput from '../common/TextInput'
+
 import { MyContext } from '../../App';
 import Title from '../common/Title';
+import Button from '../common/Button'
+import TextInput from '../common/TextInput'
 import MarginContent from '../common/MarginContent';
+import cognitoConfig from '../../config/cognitoConfig';
+import { registerFirebase } from '../../config/firebase';
+import { loginSuccess } from '../../reducers/login';
+import { showErrorMessage, showInfoMessage, showLoadingBlocker, showSuccessMessage } from '../../reducers/messages';
+import { LOGIN_SUCCESSFUL } from '../../constants/Messages';
 
 class SignInScreen extends Component {
 
     state = {
         email   : '',
         password: '',
+        error   : '',
+        newUser : false,
     };
 
     componentDidMount() {
@@ -19,7 +30,7 @@ class SignInScreen extends Component {
     }
 
     render() {
-        const { email, password } = this.state;
+        const { email, password, error } = this.state;
 
         return (
             <MyContext.Consumer>
@@ -40,10 +51,9 @@ class SignInScreen extends Component {
                                                    value={ password }
                                                    secureTextEntry={ true }
                                         />
-                                        <Button onClick={ () => {
+                                        <Button onClick={ (e) => {
                                             value.setName(this.state.email);
-                                            const { navigation } = this.props;
-                                            navigation.replace('Welcome', { name: 'Irmina', age: 4 });
+                                            this._onSignIn(e)
                                         } }
                                                 text={ 'Sign In' }
                                         />
@@ -51,6 +61,17 @@ class SignInScreen extends Component {
                                                 text={ 'Need an account?' }
                                                 type={ 'secondary' }
                                         />
+                                        <View style={ {
+                                            display       : 'flex',
+                                            justifyContent: 'center',
+                                            alignItems    : 'center',
+                                            padding       : 12
+                                        } }>
+                                            <Text style={ {
+                                                color   : 'red',
+                                                fontSize: 16
+                                            } }>{ error }</Text>
+                                        </View>
                                     </Form>
                                 </MarginContent>
                             </View>
@@ -66,11 +87,85 @@ class SignInScreen extends Component {
         this.setState({ [fieldName]: text })
     };
 
+    _onSignIn = event => {
+        event.preventDefault();
+        console.log('signing in...');
+        if (this._isFormValid()) {
+            this.setState({ error: '' });
+            this._login();
+        } else {
+            this.setState({ error: 'Wrong data' })
+        }
+    };
+
+    _isFormValid = () => {
+        return this.state.email.length > 0 &&
+            this.state.password.length > 0
+    };
+
+    _login() {
+
+        const { email, password } = this.state;
+
+        let poolData = {
+            UserPoolId: cognitoConfig.cognito.USER_POOL_ID,
+            ClientId  : cognitoConfig.cognito.APP_CLIENT_ID
+        };
+        let userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+        let userData = {
+            Username: email,
+            Pool    : userPool
+        };
+        let authenticationData = {
+            Username: email,
+            Password: password
+        };
+        let authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails(authenticationData);
+        let cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+
+        cognitoUser.authenticateUser(authenticationDetails, {
+            onSuccess          : (result) => {
+                this.props.loginSuccess(result.getIdToken().getJwtToken());
+                this.props.showSuccessMessage(LOGIN_SUCCESSFUL);
+                // this.props.showLoadingBlocker(false);
+                console.log(result);
+                registerFirebase();
+                const { navigation } = this.props;
+                navigation.replace('Welcome', { name: result['cognito:username'], age: 4 });
+            },
+            onFailure          : (err) => {
+                // this.props.showLoadingBlocker(false);
+                this.props.showErrorMessage(err.message);
+                console.log(err);
+            },
+            newPasswordRequired: (userAttributes, requiredAttributes) => {
+                // this.props.showLoadingBlocker(false);
+                this._setNewUser(true);
+            }
+        });
+    }
+
     _handleNeedAccountClick = () => {
         const { navigation } = this.props;
         navigation.navigate('SignUp');
     };
 
+    _setNewUser = value => {
+        this.setState({
+            newUser: value
+        })
+    };
+
 }
 
-export default SignInScreen;
+const mapDispatchToProps = dispatch => bindActionCreators({
+    showLoadingBlocker,
+    showSuccessMessage,
+    showInfoMessage,
+    showErrorMessage,
+    loginSuccess,
+}, dispatch);
+
+const mapStateToProps = ({}) => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignInScreen)
