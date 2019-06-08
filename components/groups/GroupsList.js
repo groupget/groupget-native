@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Modal } from 'react-native';
-import { Container, List, Button, Fab, ActionSheet, Form } from 'native-base';
+import { Container, List, Button, Fab, ActionSheet, Form, Text, ListItem as NativeListItem } from 'native-base';
 import PropTypes from 'prop-types';
 
 import FormButton from '../common/Button'
@@ -49,6 +49,9 @@ export default class GroupsList extends Component {
             <Container style={ styles.container }>
                 <View style={ { flex: 1 } }>
                     <List>
+                        <NativeListItem itemHeader first>
+                            <Text>GROUPS</Text>
+                        </NativeListItem>
                         {
                             groups.map((group, key) => <ListItem
                                 key={ key }

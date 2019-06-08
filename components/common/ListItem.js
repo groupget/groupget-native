@@ -26,14 +26,28 @@ const ListItem = (props) => {
                                       style={ styles.marginRight }
                 />
             }
-            { icon && <Icon name={ icon } style={ { ...iconStyle, ...styles.marginRight, marginTop: 2 } }/> }
+            {
+                icon && <Icon name={ icon }
+                              style={ { ...iconStyle, ...styles.marginRight, marginTop: 2 } }
+                />
+            }
             <Text style={ { ...styles.marginRight, flexGrow: 1 } }>{ content }</Text>
-            { owner && <Text style={ styles.marginRight }>{ owner }</Text> }
-            { price !== undefined ? <Badge text={ price }
-                                           type={ priceType }
-                                           style={ menu !== undefined ? { ...styles.marginRight, ...styles.badge } : { ...styles.badge } }
-            /> : null }
-            { menu ? <View style={ { marginLeft: 7 } }>{ menu }</View> : null }
+            {
+                owner && <Text style={ styles.marginRight }>{ owner }</Text>
+            }
+            {
+                price !== undefined ?
+                    <Badge text={ price }
+                           type={ priceType }
+                           style={ menu !== undefined ? { ...styles.marginRight, ...styles.badge } : { ...styles.badge } }
+                    /> :
+                    null
+            }
+            {
+                menu ?
+                    <View style={ { marginLeft: 7 } }>{ menu }</View> :
+                    null
+            }
         </NativeListItem>
     );
 };

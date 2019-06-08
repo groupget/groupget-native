@@ -15,6 +15,7 @@ import { registerFirebase } from '../../config/firebase';
 import { loginSuccess } from '../../reducers/login';
 import { showErrorMessage, showInfoMessage, showLoadingBlocker, showSuccessMessage } from '../../reducers/messages';
 import { LOGIN_SUCCESSFUL } from '../../constants/Messages';
+import fetchCognitoUser from '../../utils/fetchCognitoUser';
 
 class SignInScreen extends Component {
 
@@ -27,25 +28,9 @@ class SignInScreen extends Component {
 
     componentDidMount() {
         const {navigation} = this.props;
-        const poolData = {
-            UserPoolId: cognitoConfig.cognito.USER_POOL_ID,
-            ClientId  : cognitoConfig.cognito.APP_CLIENT_ID
-        };
-        const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
-
-        userPool.storage.sync(function (err, result) {
-            if (err) {
-                console.log(err);
-            } else if (result === 'SUCCESS') {
-                const cognitoUser = userPool.getCurrentUser();
-                console.log('cognito user:', cognitoUser);
-                if (cognitoUser != null) {
-                    navigation.replace('Groups'); //todo do it when user is already logged in
-                }
-            } else {
-                console.log('result from fetch: ', result);
-            }
-        });
+        fetchCognitoUser(() => {
+            navigation.replace('Groups'); //todo do it when user is already logged in
+        })
     }
 
     render() {

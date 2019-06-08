@@ -1,10 +1,10 @@
-import {AsyncStorage} from 'react-native';
+import { AsyncStorage } from 'react-native';
 
-export default function getTokenFromLocalStorage(tokenPostfix) {
-    for (let i = 0; i < AsyncStorage.length; i++) {
-        let key = AsyncStorage.key(i);
+export default async function getTokenFromLocalStorage(tokenPostfix) {
+    const keys = await AsyncStorage.getAllKeys();
+    keys.forEach(async key => {
         if (key.startsWith('CognitoIdentityServiceProvider') && key.endsWith(tokenPostfix)) {
-            return AsyncStorage.getItem(key);
+            return await AsyncStorage.getItem(key);
         }
-    }
+    })
 }

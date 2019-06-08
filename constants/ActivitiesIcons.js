@@ -3,4 +3,5 @@ export default {
     list   : 'clipboard',
     user   : 'person',
     group  : 'people',
+    invitation: 'mail',
 };

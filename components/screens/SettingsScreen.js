@@ -9,8 +9,7 @@ import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
 
 
 const account = {
-    name         : 'Irmina',
-    surname      : 'Krysiak',
+    username     : 'irmikrys',
     email        : 'irmikrys@student.agh.edu.pl',
     notifications: true,
 };
@@ -31,7 +30,7 @@ export default class SettingsScreen extends React.Component {
 
     render() {
 
-        const { name, surname, email } = account;
+        const { username, email } = account;
         const { notifications } = this.state;
 
         return (
@@ -43,7 +42,7 @@ export default class SettingsScreen extends React.Component {
                             <Left>
                                 <Icon name={ 'contact' } size={ 50 }/>
                                 <Body>
-                                <Text>{ name } { surname }</Text>
+                                <Text>{ username }</Text>
                                 <Text note>{ email }</Text>
                                 </Body>
                             </Left>
@@ -54,13 +53,17 @@ export default class SettingsScreen extends React.Component {
                     </Card>
                     <MarginContent>
                         <View style={ {
-                            display      : 'flex',
-                            flexDirection: 'row',
+                            flex: 1 //fixme does not work
                         } }>
-                            <Text style={ { fontSize: 16, flexGrow: 1 } }>Notifications</Text>
-                            <Switch value={ notifications }
-                                    onValueChange={ this._toggleNotifications }
-                            />
+                            <View style={ {
+                                display      : 'flex',
+                                flexDirection: 'row',
+                            } }>
+                                <Text style={ { fontSize: 16, flexGrow: 1 } }>Notifications</Text>
+                                <Switch value={ notifications }
+                                        onValueChange={ this._toggleNotifications }
+                                />
+                            </View>
                         </View>
                         <Button onClick={ this._handleLogout }
                                 text={ 'Logout' }
