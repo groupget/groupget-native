@@ -168,9 +168,9 @@ export default class GroupsList extends Component {
                 if (result.ok === true) {
                     this.props.updateGroupsWithNew(name);
                     refreshTokens(token)
-                        .then(tokens => {
-                            saveRefreshToken(tokens.refreshToken);
-                            saveMainToken(tokens.mainToken);
+                        .then(async tokens => {
+                            await saveRefreshToken(tokens.refreshToken);
+                            await saveMainToken(tokens.mainToken);
                         });
                 }
             })

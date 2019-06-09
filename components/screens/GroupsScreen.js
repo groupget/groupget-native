@@ -31,18 +31,20 @@ export default class GroupsScreen extends React.Component {
     };
 
     async componentDidMount() {
-        const token = fetchMainToken();
+        const jwtToken = await fetchMainToken();
         fetch(endpoints.ACCOUNTS + '/users/invitations', {
             headers: new Headers({
-                'Authorization': 'Bearer ' + token,
+                'Authorization': 'Bearer ' + jwtToken,
             }),
         })
-            .then((data) => {
+            .then(async (data) => {
                 console.log('\n\ndata fetched for invitations: ', data);
-                refreshTokens(token)
-                    .then(tokens => {
-                        saveRefreshToken(tokens.refreshToken);
-                        saveMainToken(tokens.mainToken);
+                const refreshToken = await fetchRefreshToken();
+                await refreshTokens(refreshToken)
+                    .then(async tokens => {
+                        console.log("tokens", tokens);
+                        await saveRefreshToken(tokens.refreshToken);
+                        await saveMainToken(tokens.mainToken);
                     });
                 this.setState({ invitations: data.groupNames });
             })
@@ -51,7 +53,7 @@ export default class GroupsScreen extends React.Component {
             });
 
         try {
-            const decoded = jwtDecode(token);
+            const decoded = jwtDecode(jwtToken);
             console.log('decoded base64: ', decoded);
             this.setState({ groups: decoded['cognito:groups'] })
         } catch (e) {
@@ -96,9 +98,9 @@ export default class GroupsScreen extends React.Component {
             .then((result) => {
                 console.log('result from accept invitation: ', result);
                 refreshTokens(refreshToken)
-                    .then(tokens => {
-                        saveRefreshToken(tokens.refreshToken);
-                        saveMainToken(tokens.mainToken);
+                    .then(async tokens => {
+                        await saveRefreshToken(tokens.refreshToken);
+                        await saveMainToken(tokens.mainToken);
                     });
             })
             .catch((err) => {
@@ -120,9 +122,9 @@ export default class GroupsScreen extends React.Component {
             .then((result) => {
                 console.log('result from decline invitation: ', result);
                 refreshTokens(refreshToken)
-                    .then(tokens => {
-                        saveRefreshToken(tokens.refreshToken);
-                        saveMainToken(tokens.mainToken);
+                    .then(async tokens => {
+                        await saveRefreshToken(tokens.refreshToken);
+                        await saveMainToken(tokens.mainToken);
                     });
             })
             .catch((err) => {

@@ -130,12 +130,12 @@ class SignInScreen extends Component {
         let cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
 
         cognitoUser.authenticateUser(authenticationDetails, {
-            onSuccess          : (result) => {
+            onSuccess          : async (result) => {
                 this.props.loginSuccess(result.getIdToken().getJwtToken());
                 this.props.showSuccessMessage(LOGIN_SUCCESSFUL);
                 console.log('sign in', result);
-                saveMainToken(result.getIdToken().getJwtToken());
-                saveRefreshToken(result.getRefreshToken().getToken());
+                await saveMainToken(result.getIdToken().getJwtToken());
+                await saveRefreshToken(result.getRefreshToken().getToken());
                 const { navigation } = this.props;
                 navigation.replace('Welcome');
             },
