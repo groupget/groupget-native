@@ -16,6 +16,8 @@ import { loginSuccess } from '../../reducers/login';
 import { showErrorMessage, showInfoMessage, showLoadingBlocker, showSuccessMessage } from '../../reducers/messages';
 import { LOGIN_SUCCESSFUL } from '../../constants/Messages';
 import fetchCognitoUser from '../../utils/fetchCognitoUser';
+import saveMainToken from '../../utils/saveMainToken';
+import saveRefreshToken from '../../utils/saveRefreshToken';
 
 class SignInScreen extends Component {
 
@@ -131,20 +133,18 @@ class SignInScreen extends Component {
             onSuccess          : (result) => {
                 this.props.loginSuccess(result.getIdToken().getJwtToken());
                 this.props.showSuccessMessage(LOGIN_SUCCESSFUL);
-                // this.props.showLoadingBlocker(false);
-                console.log(result);
-                // registerFirebase();
+                console.log('sign in', result);
+                saveMainToken(result.getIdToken().getJwtToken());
+                saveRefreshToken(result.getRefreshToken().getToken());
                 const { navigation } = this.props;
                 navigation.replace('Welcome');
             },
             onFailure          : (err) => {
-                // this.props.showLoadingBlocker(false);
                 this.props.showErrorMessage(err.message);
                 console.log(err);
                 alert(err.message);
             },
             newPasswordRequired: (userAttributes, requiredAttributes) => {
-                // this.props.showLoadingBlocker(false);
                 this._setNewUser(true);
             }
         });

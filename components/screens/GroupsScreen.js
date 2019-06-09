@@ -7,7 +7,7 @@ import MarginContent from '../common/MarginContent';
 import InvitationsList from '../user/InvitationsList';
 import endpoints from '../../config/endpoints';
 import UserPool from '../../constants/UserPool';
-import fetchTokenFromSession from '../../utils/fetchTokenFromSession';
+import fetchMainToken from '../../utils/fetchMainToken';
 
 export default class GroupsScreen extends React.Component {
     static navigationOptions = {
@@ -41,20 +41,15 @@ export default class GroupsScreen extends React.Component {
                             return;
                         }
 
-                        console.log('session valid: ' + session.isValid());
-                        console.log('session from cdm:', session);
-
-                        console.log('mounting groups screen');
-
                         let token = '';
 
                         try {
                             token = session.getIdToken().getJwtToken();
                         } catch (e) {
-                            console.log('error getting token: ', e);
+                            alert(`error getting token: ${e}`);
                         }
 
-                        console.log('token from session: ', token);
+                        console.log('\n\ntoken from session, groups screen cdm: ', token);
 
                         fetch(endpoints.ACCOUNTS + '/users/invitations', {
                             headers: new Headers({
@@ -62,7 +57,7 @@ export default class GroupsScreen extends React.Component {
                             }),
                         })
                             .then((data) => {
-                                console.log('data fetched for invitations: ', data);
+                                console.log('\n\ndata fetched for invitations: ', data);
                                 this.setState({ invitations: data.groupNames });
                             })
                             .catch((err) => {
@@ -110,15 +105,12 @@ export default class GroupsScreen extends React.Component {
 
     acceptInvitation = async (invitation) => {
         console.log(invitation);
-        const token = await fetchTokenFromSession();
+        const token = await fetchMainToken();
         fetch(endpoints.ACCOUNTS + `/groups/${ invitation }/users`, {
             method : 'POST',
             headers: new Headers({
                 'Authorization': 'Bearer ' + token,
             }),
-            body   : JSON.stringify({
-                //todo what in body?
-            })
         })
             .then((result) => {
                 console.log('result from accept invitation: ', result);
@@ -131,7 +123,7 @@ export default class GroupsScreen extends React.Component {
 
     declineInvitation = async (invitation) => {
         console.log(invitation);
-        const token = await fetchTokenFromSession();
+        const token = await fetchMainToken();
         fetch(endpoints.ACCOUNTS + `/users/invitations/${ invitation }`, {
             method : 'DELETE',
             headers: new Headers({

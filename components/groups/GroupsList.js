@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Modal } from 'react-native';
 import { Container, List, Button, Fab, ActionSheet, Form, Text, ListItem as NativeListItem } from 'native-base';
-import PropTypes from 'prop-types';
 
 import FormButton from '../common/Button'
 import ListItem from '../common/ListItem';
@@ -11,7 +10,6 @@ import ActivitiesIcons from '../../constants/ActivitiesIcons';
 import MarginContent from '../common/MarginContent';
 import Title from '../common/Title';
 import TextInput from '../common/TextInput';
-import fetchTokenFromSession from '../../utils/fetchTokenFromSession';
 import endpoints from '../../config/endpoints';
 import UserPool from '../../constants/UserPool';
 
@@ -109,7 +107,7 @@ export default class GroupsList extends Component {
     }
 
     _onGroupPress = (group) => {
-        this.props.navigation.push('Group', { name: group.name });
+        this.props.navigation.push('Group', { name: group });
     };
 
     _onMenuPress = (group) => {
@@ -143,7 +141,7 @@ export default class GroupsList extends Component {
                 alert(err.message || JSON.stringify(err));
                 return;
             }
-            const token = session.getIdToken().getJwtToken();
+            const token = session.getRefreshToken().getToken();
             this._addGroupWithToken(token);
         });
     };
@@ -165,8 +163,8 @@ export default class GroupsList extends Component {
             .then((result) => {
                 console.log('result from add group with token: ', result);
                 if (result.ok === true) {
-                    this._fetchUser();
                     this.props.updateGroupsWithNew(name);
+                    this._fetchUser();
                 }
             })
             .catch((err) => {

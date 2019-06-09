@@ -1,39 +1,52 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { Header, Item, Container, Input, Button, Text, Tab, Tabs } from 'native-base';
+import { Container, Tab, Tabs } from 'native-base';
 import MembersTab from './MembersTab';
 import ListsTab from './ListsTab';
 import ExpensesTab from './ExpensesTab';
 import ActivityTab from './ActivityTab';
-import Icon from '../common/Icon';
+import endpoints from '../../config/endpoints';
 
 export default class GroupView extends React.Component {
     static navigationOptions = {
         header: null,
     };
 
+    state = {
+        members: [],
+    };
+
+    componentDidMount() {
+        const { navigation } = this.props;
+        const groupName = navigation.getParam('name', 'no name provided');
+
+
+        fetch(`${ endpoints.GROUP }/${ groupName }`, {
+            headers: new Headers({
+                'Authorization': 'Bearer ' + token,
+            }),
+        })
+            .then(resultData => {
+                this.setState({ members: resultData.usernames })
+            })
+            .catch(err => {
+                alert(err.message || JSON.stringify(err))
+            });
+    }
+
     render() {
+
+        const { members } = this.state;
+
         return (
             <Container style={ styles.container }>
-                {/*<Header searchBar rounded style={ { paddingTop: 0, height: 30 } }>*/}
-                    {/*/!*<Item>*!/*/}
-                        {/*/!*<Icon name='arrow-back' onPress={ this.props.navigation.goBack() }/>*!/*/}
-                    {/*/!*</Item>*!/*/}
-                    {/*<Item>*/}
-                        {/*<Icon name='search' style={ { marginLeft: 10, marginTop: 2 } }/>*/}
-                        {/*<Input placeholder='Search' style={ { fontSize: 14 } }/>*/}
-                    {/*</Item>*/}
-                    {/*<Button transparent onPress={ undefined } title={ 'Search' }>*/}
-                        {/*<Text>Search</Text>*/}
-                    {/*</Button>*/}
-                {/*</Header>*/}
                 <Tabs>
                     <Tab heading='MEMBERS'
                          tabStyle={ styles.tabContainer }
                          activeTabStyle={ styles.activeTab }
                          activeTextStyle={ styles.activeTab }
                     >
-                        <MembersTab/>
+                        <MembersTab members={ members }/>
                     </Tab>
                     <Tab heading='LISTS'
                          tabStyle={ styles.tabContainer }
