@@ -12,7 +12,7 @@ export default class InvitationsList extends Component {
 
     render() {
 
-        const { acceptInvitation } = this.props;
+        const { acceptInvitation, declineInvitation } = this.props;
 
         const invitations = ['a', 'b'];
 
@@ -33,19 +33,34 @@ export default class InvitationsList extends Component {
                             </Text>
                         }
                         {
-                            invitations.map((invitation, key) => <ListItem
+                            invitations && invitations.map((invitation, key) => <ListItem
                                 key={ key }
-                                onPress={ () => this._onGroupPress(invitation) }
                                 content={ invitation }
                                 icon={ ActivitiesIcons.invitation }
                                 menu={
-                                    <Button transparent
-                                            onPress={ () => acceptInvitation(invitation) }
-                                    >
-                                        <Icon name={ 'checkmark-circle' }
-                                              color={ '#008000' }
-                                        />
-                                    </Button>
+                                    <View style={ {
+                                        display      : 'flex',
+                                        flexDirection: 'row',
+
+                                    } }>
+                                        <Button transparent
+                                                onPress={ () => acceptInvitation(invitation) }
+                                                style={ { marginRight: 10 } }
+                                        >
+                                            <Icon name={ 'checkmark-circle' }
+                                                  color={ '#008000' }
+                                                  size={ 35 }
+                                            />
+                                        </Button>
+                                        <Button transparent
+                                                onPress={ () => declineInvitation(invitation) }
+                                        >
+                                            <Icon name={ 'close-circle' }
+                                                  color={ '#ff0000' }
+                                                  size={ 35 }
+                                            />
+                                        </Button>
+                                    </View>
                                 }
                             />)
                         }

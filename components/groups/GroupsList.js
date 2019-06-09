@@ -11,22 +11,9 @@ import ActivitiesIcons from '../../constants/ActivitiesIcons';
 import MarginContent from '../common/MarginContent';
 import Title from '../common/Title';
 import TextInput from '../common/TextInput';
-
-
-const groups = [
-    {
-        index: 1,
-        name : 'Group1'
-    },
-    {
-        index: 2,
-        name : 'Group2'
-    },
-    {
-        index: 3,
-        name : 'Group3'
-    }
-];
+import fetchTokenFromSession from '../../utils/fetchTokenFromSession';
+import endpoints from '../../config/endpoints';
+import UserPool from '../../constants/UserPool';
 
 const BUTTONS = ['Delete', 'Cancel'];
 const DESTRUCTIVE_INDEX = 0;
@@ -36,14 +23,22 @@ export default class GroupsList extends Component {
     static navigationOptions = {};
 
     state = {
-        active : false,
-        clicked: -1,
-        name   : '',
+        active     : false,
+        clicked    : -1,
+        name       : '',
+        description: '',
+        user       : null,
     };
+
+    componentDidMount() {
+        this._fetchUser();
+        this._fetchMembers();
+    }
 
     render() {
 
-        const { active, name } = this.state;
+        const { active, name, description } = this.state;
+        const { groups } = this.props;
 
         return (
             <Container style={ styles.container }>
@@ -53,10 +48,10 @@ export default class GroupsList extends Component {
                             <Text>GROUPS</Text>
                         </NativeListItem>
                         {
-                            groups.map((group, key) => <ListItem
+                            groups && groups.map((group, key) => <ListItem
                                 key={ key }
                                 onPress={ () => this._onGroupPress(group) }
-                                content={ group.name }
+                                content={ group }
                                 icon={ ActivitiesIcons.group }
                                 menu={
                                     <Button transparent
@@ -91,6 +86,10 @@ export default class GroupsList extends Component {
                                                    placeholder={ 'Name' }
                                                    value={ name }
                                         />
+                                        <TextInput onChange={ this._handleInputChange('description') }
+                                                   placeholder={ 'Description' }
+                                                   value={ description }
+                                        />
                                         <FormButton onClick={ this._addGroup }
                                                     text={ 'Add' }
                                         />
@@ -110,8 +109,7 @@ export default class GroupsList extends Component {
     }
 
     _onGroupPress = (group) => {
-        this.props.navigation.push('Group');
-
+        this.props.navigation.push('Group', { name: group.name });
     };
 
     _onMenuPress = (group) => {
@@ -130,7 +128,7 @@ export default class GroupsList extends Component {
 
     _onFabPress = () => {
         const { active } = this.state;
-        this.setState({ active: !active, name: '' })
+        this.setState({ active: !active, name: '', description: '' })
     };
 
     _handleInputChange = fieldName => text => {
@@ -138,9 +136,55 @@ export default class GroupsList extends Component {
     };
 
     _addGroup = () => {
-        const { active } = this.state;
-        this.setState({ active: !active, name: '' })
-    }
+        const {user} = this.state;
+
+        user.getSession((err, session) => {
+            if (err) {
+                alert(err.message || JSON.stringify(err));
+                return;
+            }
+            const token = session.getIdToken().getJwtToken();
+            this._addGroupWithToken(token);
+        });
+    };
+
+    _addGroupWithToken = (token) => {
+        const { active, name, description, user } = this.state;
+
+        fetch(endpoints.GATEWAY + `groups`, {
+            method : 'POST',
+            headers: new Headers({
+                'Authorization': 'Bearer ' + token,
+            }),
+            body   : JSON.stringify({
+                'description': description,
+                'groupName'  : name,
+                'usernames'  : [user.username]
+            })
+        })
+            .then((result) => {
+                console.log('result from add group with token: ', result);
+            })
+            .catch((err) => {
+                alert(err.message || JSON.stringify(err));
+                console.log('err');
+            });
+        this.setState({ active: !active, name: '', description: '' })
+    };
+
+    _fetchUser = () => {
+        UserPool.storage.sync((err, result) => {
+            if (err) {
+            } else if (result === 'SUCCESS') {
+                const cognitoUser = UserPool.getCurrentUser();
+                this.setState({ user: cognitoUser });
+            }
+        });
+    };
+
+    _fetchMembers = () => {
+        console.log('fetching members');
+    };
 
 }
 

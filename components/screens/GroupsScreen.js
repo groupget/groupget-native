@@ -7,6 +7,10 @@ import MarginContent from '../common/MarginContent';
 import InvitationsList from '../user/InvitationsList';
 import endpoints from '../../config/endpoints';
 import getTokenFromStorage from '../../config/getTokenFromStorage';
+import fetchCognitoSession from '../../utils/fetchCognitoSession';
+import cognitoConfig from '../../config/cognitoConfig';
+import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
+import fetchTokenFromSession from '../../utils/fetchTokenFromSession';
 
 export default class GroupsScreen extends React.Component {
     static navigationOptions = {
@@ -27,29 +31,69 @@ export default class GroupsScreen extends React.Component {
     };
 
     async componentDidMount() {
-        const token = await getTokenFromStorage('refreshToken');
+        // const session = fetchCognitoSession();
 
-        console.log('token from cdm:', token);
-        console.log('mounting groups screen');
-        fetch(endpoints.GATEWAY + 'users/invitations', {
-            headers: new Headers({
-                'Authorization': 'Bearer ' + token,
-            }),
-        })
-            .then((data) => {
-                console.log('data fetched for invitations: ', data);
-                // this.setState({invitations: data.groups});
-            })
-            .catch((err) => {
+        const poolData = {
+            UserPoolId: cognitoConfig.cognito.USER_POOL_ID,
+            ClientId  : cognitoConfig.cognito.APP_CLIENT_ID
+        };
+        const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+
+        userPool.storage.sync((err, result) => {
+            if (err) {
                 console.log(err);
-            });
+            } else if (result === 'SUCCESS') {
+                const cognitoUser = userPool.getCurrentUser();
+                console.log('cognito user from fetch cognito session:', cognitoUser);
+                if (cognitoUser != null) {
+                    cognitoUser.getSession((err, session) => {
+                        if (err) {
+                            alert(err.message || JSON.stringify(err));
+                            return;
+                        }
 
-        try {
-            const decoded = jwtDecode(token);
-            console.log('decoded base64: ', decoded);
-        } catch (e) {
-            console.log(e);
-        }
+                        console.log('session valid: ' + session.isValid());
+                        console.log('session from cdm:', session);
+
+                        console.log('mounting groups screen');
+
+                        let token = '';
+
+                        try {
+                            token = session.getIdToken().getJwtToken();
+                        } catch (e) {
+                            console.log('error getting token: ', e);
+                        }
+
+                        console.log('token from session: ', token);
+
+                        fetch(endpoints.GATEWAY + 'users/invitations', {
+                            headers: new Headers({
+                                'Authorization': 'Bearer ' + token,
+                            }),
+                        })
+                            .then((data) => {
+                                console.log('data fetched for invitations: ', data);
+                                this.setState({ invitations: data.groupNames });
+                            })
+                            .catch((err) => {
+                                console.log(err);
+                            });
+
+                        try {
+                            const decoded = jwtDecode(token);
+                            console.log('decoded base64: ', decoded);
+                            this.setState({ groups: decoded['cognito:groups'] })
+                        } catch (e) {
+                            console.log(e);
+                        }
+
+                    });
+                }
+            } else {
+                console.log('result from fetch: ', result);
+            }
+        });
     }
 
     render() {
@@ -62,6 +106,7 @@ export default class GroupsScreen extends React.Component {
                     <InvitationsList navigation={ this.props.navigation }
                                      invitations={ invitations }
                                      acceptInvitation={ this.acceptInvitation }
+                                     declineInvitation={ this.declineInvitation }
                     />
                 </View>
                 <View style={ styles.container }>
@@ -73,8 +118,43 @@ export default class GroupsScreen extends React.Component {
         );
     }
 
-    acceptInvitation = (invitation) => {
+    acceptInvitation = async (invitation) => {
         console.log(invitation);
+        const token = await fetchTokenFromSession();
+        fetch(endpoints.GATEWAY + `groups/${ invitation }/users`, {
+            method : 'POST',
+            headers: new Headers({
+                'Authorization': 'Bearer ' + token,
+            }),
+            body   : JSON.stringify({
+                //todo what in body?
+            })
+        })
+            .then((result) => {
+                console.log('result from accept invitation: ', result);
+            })
+            .catch((err) => {
+                alert(err.message || JSON.stringify(err));
+                console.log('err');
+            })
+    };
+
+    declineInvitation = async (invitation) => {
+        console.log(invitation);
+        const token = await fetchTokenFromSession();
+        fetch(endpoints.GATEWAY + `users/invitations/${ invitation }`, {
+            method : 'DELETE',
+            headers: new Headers({
+                'Authorization': 'Bearer ' + token,
+            })
+        })
+            .then((result) => {
+                console.log('result from decline invitation: ', result);
+            })
+            .catch((err) => {
+                alert(err.message || JSON.stringify(err));
+                console.log('err');
+            })
     };
 }
 

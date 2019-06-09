@@ -1,5 +1,6 @@
 import React from 'react';
 // import { AsyncStorage } from 'react-native';
+import Amplify from "aws-amplify";
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import { createAppContainer, createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
 import { Root } from 'native-base';
@@ -12,7 +13,17 @@ import ListItemsScreen from './components/screens/ListItemsScreen';
 import GroupScreen from './components/screens/GroupScreen';
 import { Provider } from 'react-redux';
 import store from './config/store';
+import config from './config/cognitoConfig';
 
+
+Amplify.configure({
+    Auth: {
+        mandatorySignIn: true,
+        region: config.cognito.REGION,
+        userPoolId: config.cognito.USER_POOL_ID,
+        userPoolWebClientId: config.cognito.APP_CLIENT_ID
+    }
+});
 
 const AppNavigator = createStackNavigator({
     SignIn   : {
