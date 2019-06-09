@@ -22,7 +22,6 @@ export default class GroupView extends React.Component {
         const groupName = navigation.getParam('name', 'no name provided');
 
         const token = await fetchMainToken();
-        // console.log('token from cdm single group view: ', token);
         fetch(`${ endpoints.ACCOUNTS }/groups/${ groupName }`, {
             headers: new Headers({
                 'Authorization': 'Bearer ' + token,

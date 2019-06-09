@@ -1,7 +1,6 @@
 import React from 'react';
-// import { AsyncStorage } from 'react-native';
-import Amplify from "aws-amplify";
-import { AppLoading, Asset, Font, Icon } from 'expo';
+import Amplify from 'aws-amplify';
+import { AppLoading, Font, Icon } from 'expo';
 import { createAppContainer, createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
 import { Root } from 'native-base';
 
@@ -71,12 +70,7 @@ class App extends React.Component {
         name             : '',
         isLoadingComplete: false,
     };
-
-    async componentWillMount() {
-        // const data = await AsyncStorage.init();
-        // console.log('AsyncStorage is ready!', data);
-    }
-
+    
     componentDidMount() {
         this._loadResourcesAsync();
     }
