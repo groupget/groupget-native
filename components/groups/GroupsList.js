@@ -12,6 +12,9 @@ import Title from '../common/Title';
 import TextInput from '../common/TextInput';
 import endpoints from '../../config/endpoints';
 import UserPool from '../../constants/UserPool';
+import refreshTokens from '../../utils/refreshTokens';
+import saveRefreshToken from '../../utils/saveRefreshToken';
+import saveMainToken from '../../utils/saveMainToken';
 
 const BUTTONS = ['Delete', 'Cancel'];
 const DESTRUCTIVE_INDEX = 0;
@@ -164,7 +167,11 @@ export default class GroupsList extends Component {
                 console.log('result from add group with token: ', result);
                 if (result.ok === true) {
                     this.props.updateGroupsWithNew(name);
-                    this._fetchUser();
+                    refreshTokens(token)
+                        .then(tokens => {
+                            saveRefreshToken(tokens.refreshToken);
+                            saveMainToken(tokens.mainToken);
+                        });
                 }
             })
             .catch((err) => {

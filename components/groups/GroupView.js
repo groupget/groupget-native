@@ -7,6 +7,10 @@ import ExpensesTab from './ExpensesTab';
 import ActivityTab from './ActivityTab';
 import endpoints from '../../config/endpoints';
 import fetchMainToken from '../../utils/fetchMainToken';
+import refreshTokens from '../../utils/refreshTokens';
+import saveRefreshToken from '../../utils/saveRefreshToken';
+import saveMainToken from '../../utils/saveMainToken';
+import fetchRefreshToken from '../../utils/fetchRefreshToken';
 
 export default class GroupView extends React.Component {
     static navigationOptions = {
@@ -22,13 +26,21 @@ export default class GroupView extends React.Component {
         const groupName = navigation.getParam('name', 'no name provided');
 
         const token = await fetchMainToken();
+        const refreshToken = await fetchRefreshToken();
         fetch(`${ endpoints.ACCOUNTS }/groups/${ groupName }`, {
             headers: new Headers({
                 'Authorization': 'Bearer ' + token,
             }),
         })
             .then(response => response.json())
-            .then(responseData => this.setState({ members: responseData.usernames }))
+            .then(responseData => {
+                this.setState({ members: responseData.usernames });
+                refreshTokens(refreshToken)
+                    .then(tokens => {
+                        saveRefreshToken(tokens.refreshToken);
+                        saveMainToken(tokens.mainToken);
+                    });
+            })
             .catch(err => {
                 alert(err.message || JSON.stringify(err))
             });

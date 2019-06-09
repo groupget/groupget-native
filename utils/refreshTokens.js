@@ -1,7 +1,7 @@
 import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
 import UserPool from '../constants/UserPool';
 
-async function refresh(refreshToken) {
+export default async function refreshTokens(refreshToken) {
     let refreshTokenObj = {
         RefreshToken: refreshToken
     };
@@ -19,9 +19,20 @@ async function refresh(refreshToken) {
 
                     console.log('session', session);
 
+                    let jwtToken = '';
+                    let token = '';
+
+                    try {
+                        jwtToken = session.getIdToken().getJwtToken();
+                        token = session.getRefreshToken().getToken();
+                    } catch (e) {
+                        console.log('refreshing tokens');
+                        alert(e.message || JSON.stringify(e))
+                    }
+
                     resolve({
-                        token       : session.getIdToken().getJwtToken(),
-                        refreshToken: session.getRefreshToken().getToken()
+                        mainToken   : jwtToken,
+                        refreshToken: token
                     });
 
                     reject('refresh tokens error');

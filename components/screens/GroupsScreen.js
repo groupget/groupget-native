@@ -6,8 +6,11 @@ import GroupsList from '../groups/GroupsList';
 import MarginContent from '../common/MarginContent';
 import InvitationsList from '../user/InvitationsList';
 import endpoints from '../../config/endpoints';
-import UserPool from '../../constants/UserPool';
 import fetchMainToken from '../../utils/fetchMainToken';
+import refreshTokens from '../../utils/refreshTokens';
+import saveRefreshToken from '../../utils/saveRefreshToken';
+import saveMainToken from '../../utils/saveMainToken';
+import fetchRefreshToken from '../../utils/fetchRefreshToken';
 
 export default class GroupsScreen extends React.Component {
     static navigationOptions = {
@@ -28,56 +31,33 @@ export default class GroupsScreen extends React.Component {
     };
 
     async componentDidMount() {
-        UserPool.storage.sync((err, result) => {
-            if (err) {
-                console.log(err);
-            } else if (result === 'SUCCESS') {
-                const cognitoUser = UserPool.getCurrentUser();
-                console.log('cognito user from fetch cognito session:', cognitoUser);
-                if (cognitoUser != null) {
-                    cognitoUser.getSession((err, session) => {
-                        if (err) {
-                            alert(err.message || JSON.stringify(err));
-                            return;
-                        }
-
-                        let token = '';
-
-                        try {
-                            token = session.getIdToken().getJwtToken();
-                        } catch (e) {
-                            alert(`error getting token: ${e}`);
-                        }
-
-                        console.log('\n\ntoken from session, groups screen cdm: ', token);
-
-                        fetch(endpoints.ACCOUNTS + '/users/invitations', {
-                            headers: new Headers({
-                                'Authorization': 'Bearer ' + token,
-                            }),
-                        })
-                            .then((data) => {
-                                console.log('\n\ndata fetched for invitations: ', data);
-                                this.setState({ invitations: data.groupNames });
-                            })
-                            .catch((err) => {
-                                console.log(err);
-                            });
-
-                        try {
-                            const decoded = jwtDecode(token);
-                            console.log('decoded base64: ', decoded);
-                            this.setState({ groups: decoded['cognito:groups'] })
-                        } catch (e) {
-                            console.log(e);
-                        }
-
+        const token = fetchMainToken();
+        fetch(endpoints.ACCOUNTS + '/users/invitations', {
+            headers: new Headers({
+                'Authorization': 'Bearer ' + token,
+            }),
+        })
+            .then((data) => {
+                console.log('\n\ndata fetched for invitations: ', data);
+                refreshTokens(token)
+                    .then(tokens => {
+                        saveRefreshToken(tokens.refreshToken);
+                        saveMainToken(tokens.mainToken);
                     });
-                }
-            } else {
-                console.log('result from fetch: ', result);
-            }
-        });
+                this.setState({ invitations: data.groupNames });
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+
+        try {
+            const decoded = jwtDecode(token);
+            console.log('decoded base64: ', decoded);
+            this.setState({ groups: decoded['cognito:groups'] })
+        } catch (e) {
+            console.log(e);
+        }
+
     }
 
     render() {
@@ -106,6 +86,7 @@ export default class GroupsScreen extends React.Component {
     acceptInvitation = async (invitation) => {
         console.log(invitation);
         const token = await fetchMainToken();
+        const refreshToken = await fetchRefreshToken();
         fetch(endpoints.ACCOUNTS + `/groups/${ invitation }/users`, {
             method : 'POST',
             headers: new Headers({
@@ -114,6 +95,11 @@ export default class GroupsScreen extends React.Component {
         })
             .then((result) => {
                 console.log('result from accept invitation: ', result);
+                refreshTokens(refreshToken)
+                    .then(tokens => {
+                        saveRefreshToken(tokens.refreshToken);
+                        saveMainToken(tokens.mainToken);
+                    });
             })
             .catch((err) => {
                 alert(err.message || JSON.stringify(err));
@@ -124,6 +110,7 @@ export default class GroupsScreen extends React.Component {
     declineInvitation = async (invitation) => {
         console.log(invitation);
         const token = await fetchMainToken();
+        const refreshToken = await fetchRefreshToken();
         fetch(endpoints.ACCOUNTS + `/users/invitations/${ invitation }`, {
             method : 'DELETE',
             headers: new Headers({
@@ -132,6 +119,11 @@ export default class GroupsScreen extends React.Component {
         })
             .then((result) => {
                 console.log('result from decline invitation: ', result);
+                refreshTokens(refreshToken)
+                    .then(tokens => {
+                        saveRefreshToken(tokens.refreshToken);
+                        saveMainToken(tokens.mainToken);
+                    });
             })
             .catch((err) => {
                 alert(err.message || JSON.stringify(err));
@@ -140,7 +132,7 @@ export default class GroupsScreen extends React.Component {
     };
 
     updateGroupsWithNew = (name) => {
-        this.setState((prevState) => ({groups: [...prevState.groups, name]}))
+        this.setState((prevState) => ({ groups: [...prevState.groups, name] }))
     };
 }
 
