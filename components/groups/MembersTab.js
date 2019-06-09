@@ -46,18 +46,19 @@ export default class MembersTab extends Component {
     render() {
 
         const { active, email } = this.state;
+        const { members } = this.props;
 
         return (
             <Container style={ styles.container }>
                 <View style={ { flex: 1 } }>
                     <List>
                         {
-                            members.map((member, key) => <ListItem
+                            members && members.map((memberName, key) => <ListItem
                                 key={ key }
-                                content={ member.name }
+                                content={ memberName }
                                 icon={ ActivitiesIcons.user }
-                                price={ member.money }
-                                priceType={ member.status }
+                                // price={ member.money }
+                                // priceType={ member.status }
                                 menu={
                                     <Button transparent
                                             onPress={ () => this._onMenuPress(member) }
