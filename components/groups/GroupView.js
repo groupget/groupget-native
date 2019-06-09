@@ -6,6 +6,7 @@ import ListsTab from './ListsTab';
 import ExpensesTab from './ExpensesTab';
 import ActivityTab from './ActivityTab';
 import endpoints from '../../config/endpoints';
+import fetchMainToken from '../../utils/fetchMainToken';
 
 export default class GroupView extends React.Component {
     static navigationOptions = {
@@ -16,12 +17,13 @@ export default class GroupView extends React.Component {
         members: [],
     };
 
-    componentDidMount() {
+    async componentDidMount() {
         const { navigation } = this.props;
         const groupName = navigation.getParam('name', 'no name provided');
 
-
-        fetch(`${ endpoints.GROUP }/${ groupName }`, {
+        const token = await fetchMainToken();
+        console.log('token from cdm single group view: ', token);
+        fetch(`${ endpoints.ACCOUNTS }/groups/${ groupName }`, {
             headers: new Headers({
                 'Authorization': 'Bearer ' + token,
             }),
