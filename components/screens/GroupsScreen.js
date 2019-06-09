@@ -6,10 +6,7 @@ import GroupsList from '../groups/GroupsList';
 import MarginContent from '../common/MarginContent';
 import InvitationsList from '../user/InvitationsList';
 import endpoints from '../../config/endpoints';
-import getTokenFromStorage from '../../config/getTokenFromStorage';
-import fetchCognitoSession from '../../utils/fetchCognitoSession';
-import cognitoConfig from '../../config/cognitoConfig';
-import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
+import UserPool from '../../constants/UserPool';
 import fetchTokenFromSession from '../../utils/fetchTokenFromSession';
 
 export default class GroupsScreen extends React.Component {
@@ -31,19 +28,11 @@ export default class GroupsScreen extends React.Component {
     };
 
     async componentDidMount() {
-        // const session = fetchCognitoSession();
-
-        const poolData = {
-            UserPoolId: cognitoConfig.cognito.USER_POOL_ID,
-            ClientId  : cognitoConfig.cognito.APP_CLIENT_ID
-        };
-        const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
-
-        userPool.storage.sync((err, result) => {
+        UserPool.storage.sync((err, result) => {
             if (err) {
                 console.log(err);
             } else if (result === 'SUCCESS') {
-                const cognitoUser = userPool.getCurrentUser();
+                const cognitoUser = UserPool.getCurrentUser();
                 console.log('cognito user from fetch cognito session:', cognitoUser);
                 if (cognitoUser != null) {
                     cognitoUser.getSession((err, session) => {
@@ -67,7 +56,7 @@ export default class GroupsScreen extends React.Component {
 
                         console.log('token from session: ', token);
 
-                        fetch(endpoints.GATEWAY + 'users/invitations', {
+                        fetch(endpoints.ACCOUNTS + '/users/invitations', {
                             headers: new Headers({
                                 'Authorization': 'Bearer ' + token,
                             }),
@@ -111,6 +100,7 @@ export default class GroupsScreen extends React.Component {
                 </View>
                 <View style={ styles.container }>
                     <GroupsList navigation={ this.props.navigation }
+                                updateGroupsWithNew={ this.updateGroupsWithNew }
                                 groups={ groups }
                     />
                 </View>
@@ -121,7 +111,7 @@ export default class GroupsScreen extends React.Component {
     acceptInvitation = async (invitation) => {
         console.log(invitation);
         const token = await fetchTokenFromSession();
-        fetch(endpoints.GATEWAY + `groups/${ invitation }/users`, {
+        fetch(endpoints.ACCOUNTS + `/groups/${ invitation }/users`, {
             method : 'POST',
             headers: new Headers({
                 'Authorization': 'Bearer ' + token,
@@ -142,7 +132,7 @@ export default class GroupsScreen extends React.Component {
     declineInvitation = async (invitation) => {
         console.log(invitation);
         const token = await fetchTokenFromSession();
-        fetch(endpoints.GATEWAY + `users/invitations/${ invitation }`, {
+        fetch(endpoints.ACCOUNTS + `/users/invitations/${ invitation }`, {
             method : 'DELETE',
             headers: new Headers({
                 'Authorization': 'Bearer ' + token,
@@ -155,6 +145,10 @@ export default class GroupsScreen extends React.Component {
                 alert(err.message || JSON.stringify(err));
                 console.log('err');
             })
+    };
+
+    updateGroupsWithNew = (name) => {
+        this.setState((prevState) => ({groups: [...prevState.groups, name]}))
     };
 }
 

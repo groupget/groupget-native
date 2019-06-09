@@ -136,7 +136,7 @@ export default class GroupsList extends Component {
     };
 
     _addGroup = () => {
-        const {user} = this.state;
+        const { user } = this.state;
 
         user.getSession((err, session) => {
             if (err) {
@@ -151,7 +151,7 @@ export default class GroupsList extends Component {
     _addGroupWithToken = (token) => {
         const { active, name, description, user } = this.state;
 
-        fetch(endpoints.GATEWAY + `groups`, {
+        fetch(endpoints.ACCOUNTS + `/groups`, {
             method : 'POST',
             headers: new Headers({
                 'Authorization': 'Bearer ' + token,
@@ -164,6 +164,10 @@ export default class GroupsList extends Component {
         })
             .then((result) => {
                 console.log('result from add group with token: ', result);
+                if (result.ok === true) {
+                    this._fetchUser();
+                    this.props.updateGroupsWithNew(name);
+                }
             })
             .catch((err) => {
                 alert(err.message || JSON.stringify(err));
