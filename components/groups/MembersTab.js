@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Modal } from 'react-native';
-import { Container, List, Button, Fab, ActionSheet, Form } from 'native-base';
-import FormButton from '../common/Button'
+import { Container, List, Button, Fab, ActionSheet, Form, Text } from 'native-base';
+import { Query } from 'react-apollo';
+import gql from 'graphql-tag';
 
+import FormButton from '../common/Button';
 import ListItem from '../common/ListItem';
 import Icon from '../common/Icon';
 import Colors from '../../constants/Colors';
@@ -17,28 +19,19 @@ import saveMainToken from '../../utils/saveMainToken';
 import fetchMainToken from '../../utils/fetchMainToken';
 import fetchRefreshToken from '../../utils/fetchRefreshToken';
 
-
-const members = [
-    {
-        name  : 'You',
-        money : 4.50,
-        status: 'minus'
-    },
-    {
-        name  : 'User2',
-        money : 7.50,
-        status: 'plus'
-    },
-    {
-        name  : 'User3',
-        money : 0.00,
-        status: 'zero'
-    }
-];
-
 const BUTTONS = ['Delete', 'Cancel'];
 const DESTRUCTIVE_INDEX = 0;
 const CANCEL_INDEX = 1;
+
+const FETCH_MEMBERS_EXPENSES = (name) => gql`
+  query { 
+      getUserTotalExpenses(groupId: ${ name }) {
+        _id
+        totalAmount
+      }
+  }
+`;
+
 
 export default class MembersTab extends Component {
     static navigationOptions = {};
@@ -52,67 +45,83 @@ export default class MembersTab extends Component {
     render() {
 
         const { active, username } = this.state;
-        const { members } = this.props;
+        const { members, groupName } = this.props;
 
         return (
-            <Container style={ styles.container }>
-                <View style={ { flex: 1 } }>
-                    <List>
-                        {
-                            members && members.map((memberName, key) => <ListItem
-                                key={ key }
-                                content={ memberName }
-                                icon={ ActivitiesIcons.user }
-                                // price={ member.money }
-                                // priceType={ member.status }
-                                menu={
-                                    <Button transparent
-                                            onPress={ () => this._onMenuPress(member) }
-                                    >
-                                        <Icon name={ 'more' }/>
-                                    </Button>
-                                }
-                            />)
+            <Query query={ FETCH_MEMBERS_EXPENSES(groupName) }
+            >
+                {
+                    ({ data, error, loading }) => {
+                        if (loading) {
+                            return <Text> Loading... </Text>
+                        } else if (error) {
+                            return <Text> { error } </Text>
                         }
-                    </List>
-                    <Fab active={ active }
-                         direction='up'
-                         containerStyle={ {} }
-                         style={ { backgroundColor: Colors.primaryColor } }
-                         position='bottomRight'
-                         onPress={ this._onFabPress }
-                    >
-                        <Icon name='add'/>
-                    </Fab>
-                    <Modal animationType='slide'
-                           transparent={ false }
-                           visible={ active }
-                    >
-                        <Container style={ { display: 'flex', justifyContent: 'center' } }>
+                        alert(JSON.stringify(data));
+                        return (
+                            <Container style={ styles.container }>
+                                <View style={ { flex: 1 } }>
+                                    <List>
+                                        {
+                                            members && members.map((memberName, key) => <ListItem
+                                                key={ key }
+                                                content={ memberName }
+                                                icon={ ActivitiesIcons.user }
+                                                // price={ member.money }
+                                                // priceType={ member.status }
+                                                menu={
+                                                    <Button transparent
+                                                            onPress={ () => this._onMenuPress(member) }
+                                                    >
+                                                        <Icon name={ 'more' }/>
+                                                    </Button>
+                                                }
+                                            />)
+                                        }
+                                    </List>
+                                    <Fab active={ active }
+                                         direction='up'
+                                         containerStyle={ {} }
+                                         style={ { backgroundColor: Colors.primaryColor } }
+                                         position='bottomRight'
+                                         onPress={ this._onFabPress }
+                                    >
+                                        <Icon name='add'/>
+                                    </Fab>
+                                    <Modal animationType='slide'
+                                           transparent={ false }
+                                           visible={ active }
+                                    >
+                                        <Container style={ { display: 'flex', justifyContent: 'center' } }>
 
-                            <View>
-                                <Title text={ 'Send Invitation to Group' }/>
-                                <MarginContent>
-                                    <Form>
-                                        <TextInput onChange={ this._handleInputChange('username') }
-                                                   placeholder={ 'Email' }
-                                                   value={ username }
-                                        />
-                                        <FormButton onClick={ this._sendInvitation }
-                                                    text={ 'Send' }
-                                        />
-                                        <FormButton onClick={ this._onFabPress }
-                                                    text={ 'Done' }
-                                                    type={ 'secondary' }
-                                        />
-                                    </Form>
-                                </MarginContent>
-                            </View>
+                                            <View>
+                                                <Title text={ 'Send Invitation to Group' }/>
+                                                <MarginContent>
+                                                    <Form>
+                                                        <TextInput onChange={ this._handleInputChange('username') }
+                                                                   placeholder={ 'Email' }
+                                                                   value={ username }
+                                                        />
+                                                        <FormButton onClick={ this._sendInvitation }
+                                                                    text={ 'Send' }
+                                                        />
+                                                        <FormButton onClick={ this._onFabPress }
+                                                                    text={ 'Done' }
+                                                                    type={ 'secondary' }
+                                                        />
+                                                    </Form>
+                                                </MarginContent>
+                                            </View>
 
-                        </Container>
-                    </Modal>
-                </View>
-            </Container>
+                                        </Container>
+                                    </Modal>
+                                </View>
+                            </Container>
+                        )
+                    }
+                }
+
+            </Query>
         );
     }
 
