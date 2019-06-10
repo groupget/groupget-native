@@ -24,9 +24,9 @@ const DESTRUCTIVE_INDEX = 0;
 const CANCEL_INDEX = 1;
 
 const FETCH_MEMBERS_EXPENSES = gql`
-  query Expenses($groupId: String!){ 
+  query getUserTotalExpenses($groupId: String!){ 
       getUserTotalExpenses(groupId: $groupId) {
-        _id
+        username: _id
         totalAmount
       }
   }
@@ -60,26 +60,30 @@ export default class MembersTab extends Component {
                         } else if (error) {
                             return <Text> { error } </Text>
                         }
-                        alert(JSON.stringify(data));
                         return (
                             <Container style={ styles.container }>
                                 <View style={ { flex: 1 } }>
                                     <List>
                                         {
-                                            members && members.map((memberName, key) => <ListItem
-                                                key={ key }
-                                                content={ memberName }
-                                                icon={ ActivitiesIcons.user }
-                                                // price={ member.money }
-                                                // priceType={ member.status }
-                                                menu={
-                                                    <Button transparent
-                                                            onPress={ () => this._onMenuPress(member) }
-                                                    >
-                                                        <Icon name={ 'more' }/>
-                                                    </Button>
-                                                }
-                                            />)
+                                            members && members.map((memberName, key) => {
+                                                const expenses = data['getUserTotalExpenses'];
+                                                const userData = expenses.filter(member => member.username === memberName)[0];
+                                                const amount = userData && userData.totalAmount;
+                                                return (
+                                                    <ListItem key={ key }
+                                                              content={ memberName }
+                                                              icon={ ActivitiesIcons.user }
+                                                              price={ amount || 0 }
+                                                              priceType={ amount > 0 ? 'plus' : 'zero' }
+                                                              menu={
+                                                                  <Button transparent
+                                                                          onPress={ () => this._onMenuPress(memberName) }
+                                                                  >
+                                                                      <Icon name={ 'more' }/>
+                                                                  </Button>
+                                                              }
+                                                    />)
+                                            })
                                         }
                                     </List>
                                     <Fab active={ active }
@@ -134,9 +138,36 @@ export default class MembersTab extends Component {
                 options               : BUTTONS,
                 cancelButtonIndex     : CANCEL_INDEX,
                 destructiveButtonIndex: DESTRUCTIVE_INDEX,
-                title                 : member.name,
+                title                 : member,
             },
-            buttonIndex => {
+            async buttonIndex => {
+                if (buttonIndex === DESTRUCTIVE_INDEX) {
+                    const {groupName} = this.props;
+                    const refreshToken = await fetchRefreshToken();
+                    const token = await fetchMainToken();
+                    console.log('DELETING USER!! =================\n\n============');
+                    fetch(endpoints.ACCOUNTS + `/groups/${groupName}/users/${ member }`, {
+                        method : 'DELETE',
+                        headers: new Headers({
+                            'Authorization': 'Bearer ' + token,
+                        })
+                    })
+                        .then((result) => {
+                            console.log('result from delete member: ', result);
+                            refreshTokens(refreshToken)
+                                .then(async tokens => {
+                                    await saveRefreshToken(tokens.refreshToken);
+                                    await saveMainToken(tokens.mainToken);
+                                });
+                            if (result.status === 200) {
+                                this.props.updateUsersOnDelete(groupName, member);
+                            }
+                        })
+                        .catch((err) => {
+                            alert(err.message || JSON.stringify(err));
+                            console.log('err');
+                        })
+                }
                 this.setState({ clicked: BUTTONS[buttonIndex] });
             }
         )
