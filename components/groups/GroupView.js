@@ -87,26 +87,35 @@ export default class GroupView extends React.Component {
                          activeTabStyle={ styles.activeTab }
                          activeTextStyle={ styles.activeTab }
                     >
-                        <ListsTab navigation={ this.props.navigation }
-                                  groupName={ groupName }
-                        />
+                        {
+                            planningClient ? <ApolloProvider client={ planningClient }>
+                                <ListsTab navigation={ this.props.navigation }
+                                          groupName={ groupName }
+                                />
+                            </ApolloProvider> : <Text>Loading...</Text>
+                        }
+
                     </Tab>
                     <Tab heading='EXPENSES'
                          tabStyle={ styles.tabContainer }
                          activeTabStyle={ styles.activeTab }
                          activeTextStyle={ styles.activeTab }
                     >
-                        <ExpensesTab groupName={ groupName }
-                        />
+                        {
+                            budgetClient ? <ApolloProvider client={ budgetClient }>
+                                <ExpensesTab groupName={ groupName }
+                                />
+                            </ApolloProvider> : <Text>Loading...</Text>
+                        }
                     </Tab>
-                    <Tab heading='ACTIVITY'
-                         tabStyle={ styles.tabContainer }
-                         activeTabStyle={ styles.activeTab }
-                         activeTextStyle={ styles.activeTab }
-                    >
-                        <ActivityTab groupName={ groupName }
-                        />
-                    </Tab>
+                    {/*<Tab heading='ACTIVITY'*/}
+                         {/*tabStyle={ styles.tabContainer }*/}
+                         {/*activeTabStyle={ styles.activeTab }*/}
+                         {/*activeTextStyle={ styles.activeTab }*/}
+                    {/*>*/}
+                        {/*<ActivityTab groupName={ groupName }*/}
+                        {/*/>*/}
+                    {/*</Tab>*/}
                 </Tabs>
             </Container>
         );
