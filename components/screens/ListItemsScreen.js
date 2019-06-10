@@ -166,7 +166,7 @@ export default class ListItemsScreen extends React.Component {
     };
 
     _onItemPress = (item) => {
-
+        item.isChecked = !item.isChecked;
     };
 
     _handleInputChange = fieldName => text => {

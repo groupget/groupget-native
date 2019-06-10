@@ -12,7 +12,7 @@ import Title from '../common/Title';
 import TextInput from '../common/TextInput';
 import ActivitiesIcons from '../../constants/ActivitiesIcons';
 import gql from 'graphql-tag';
-import { Query } from 'react-apollo';
+import { Query, Mutation } from 'react-apollo';
 import fetchMainToken from '../../utils/fetchMainToken';
 
 //
@@ -48,15 +48,27 @@ const FETCH_ALL_EXPENSES = gql`
   }
 `;
 
+const ADD_EXPENSE = gql`
+  mutation ($newExpenseData: NewExpenseInput!) {
+    addExpense (newExpenseData: $newExpenseData){
+        amount
+        username: userId
+        description
+        createdAt
+      }
+  }
+`;
+
 export default class ExpensesTab extends Component {
     static navigationOptions = {};
 
     state = {
-        active  : false,
-        clicked : -1,
-        name    : '',
-        money   : '',
-        username: '',
+        active     : false,
+        clicked    : -1,
+        name       : '',
+        money      : '',
+        username   : '',
+        description: '',
     };
 
     async componentDidMount() {
@@ -74,7 +86,7 @@ export default class ExpensesTab extends Component {
     render() {
 
         const { groupName } = this.props;
-        const { active, name, money, username } = this.state;
+        const { active, name, money, username, description } = this.state;
 
         return (
             <Query query={ FETCH_ALL_EXPENSES }
@@ -125,32 +137,87 @@ export default class ExpensesTab extends Component {
                                            transparent={ false }
                                            visible={ active }
                                     >
-                                        <Container style={ { display: 'flex', justifyContent: 'center' } }>
 
-                                            <View>
-                                                <Title text={ 'Add Expense to Group' }/>
-                                                <MarginContent>
-                                                    <Form>
-                                                        <TextInput onChange={ this._handleInputChange('name') }
-                                                                   placeholder={ 'Name' }
-                                                                   value={ name }
-                                                        />
-                                                        <TextInput onChange={ this._handleInputChange('money') }
-                                                                   placeholder={ 'Money spent' }
-                                                                   value={ money }
-                                                        />
-                                                        <FormButton onClick={ this._addExpense }
-                                                                    text={ 'Add' }
-                                                        />
-                                                        <FormButton onClick={ this._onFabPress }
-                                                                    text={ 'Done' }
-                                                                    type={ 'secondary' }
-                                                        />
-                                                    </Form>
-                                                </MarginContent>
-                                            </View>
+                                        <Mutation
+                                            mutation={ ADD_EXPENSE }
+                                            variables={ {
+                                                newExpenseData: {
+                                                    amount     : Number(money),
+                                                    userId     : username,
+                                                    groupId    : this.props.groupName,
+                                                    description: description
+                                                }
+                                            } }
+                                            update={ (cache, { data: { addExpense } }) => {
+                                                const data = cache.readQuery({
+                                                    query    : FETCH_ALL_EXPENSES,
+                                                    variables: {
+                                                        groupId: groupName
+                                                    }
+                                                });
+                                                const newExpense = addExpense;
+                                                const newData = {
+                                                    expenses: [newExpense, ...data.getExpenses],
+                                                    getExpenses: data.getExpenses
+                                                };
+                                                cache.writeQuery({
+                                                    query: FETCH_ALL_EXPENSES,
+                                                    data : newData
+                                                });
+                                            } }
+                                        >
+                                            {
+                                                (addExpense, { loading, error }) => {
+                                                    const submit = () => {
+                                                        if (error) {
+                                                            return <Text> Error </Text>;
+                                                        }
+                                                        if (loading) {
+                                                            return;
+                                                        }
+                                                        addExpense();
+                                                    };
+                                                    return (
+                                                        <Container
+                                                            style={ { display: 'flex', justifyContent: 'center' } }>
 
-                                        </Container>
+                                                            <View>
+                                                                <Title text={ 'Add Expense to Group' }/>
+                                                                <MarginContent>
+                                                                    <Form>
+                                                                        <TextInput
+                                                                            onChange={ this._handleInputChange('name') }
+                                                                            placeholder={ 'Name' }
+                                                                            value={ name }
+                                                                        />
+                                                                        <TextInput
+                                                                            onChange={ this._handleInputChange('money') }
+                                                                            placeholder={ 'Money spent' }
+                                                                            value={ money }
+                                                                        />
+                                                                        <TextInput
+                                                                            onChange={ this._handleInputChange('description') }
+                                                                            placeholder={ 'Description' }
+                                                                            value={ description }
+                                                                        />
+                                                                        <FormButton
+                                                                            onClick={ () => this._addExpense(submit) }
+                                                                            text={ 'Add' }
+                                                                        />
+                                                                        <FormButton onClick={ this._onFabPress }
+                                                                                    text={ 'Done' }
+                                                                                    type={ 'secondary' }
+                                                                        />
+                                                                    </Form>
+                                                                </MarginContent>
+                                                            </View>
+
+                                                        </Container>
+                                                    );
+                                                }
+                                            }
+                                        </Mutation>
+
                                     </Modal>
                                 </ScrollView>
                             </Container>
@@ -176,16 +243,17 @@ export default class ExpensesTab extends Component {
 
     _onFabPress = () => {
         const { active } = this.state;
-        this.setState({ active: !active, email: '' })
+        this.setState({ active: !active, name: '', money: '', description: '' })
     };
 
     _handleInputChange = fieldName => text => {
         this.setState({ [fieldName]: text })
     };
 
-    _addExpense = () => {
+    _addExpense = (submit) => {
+        submit();
         const { active } = this.state;
-        this.setState({ active: !active, name: '', money: '' })
+        this.setState({ active: !active, name: '', money: '', description: '' })
     }
 
 }
