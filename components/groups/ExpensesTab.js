@@ -15,23 +15,6 @@ import gql from 'graphql-tag';
 import { Query, Mutation } from 'react-apollo';
 import fetchMainToken from '../../utils/fetchMainToken';
 
-//
-// const expenses = [
-//     {
-//         name  : 'Expense1',
-//         money : 4.50,
-//         status: 'plus',
-//         owner : 'You',
-//         date  : '2019-02-12'
-//     },
-//     {
-//         name  : 'Expense2',
-//         money : 12.50,
-//         status: 'minus',
-//         owner : 'User1',
-//         date  : '2019-01-21'
-//     },
-// ];
 
 const BUTTONS = ['Details', 'Cancel'];
 const CANCEL_INDEX = 1;
