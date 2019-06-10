@@ -12,9 +12,7 @@ export default class InvitationsList extends Component {
 
     render() {
 
-        const { acceptInvitation, declineInvitation } = this.props;
-
-        const invitations = ['a', 'b'];
+        const { acceptInvitation, declineInvitation, invitations } = this.props;
 
         return (
             <Container style={ styles.container }>
@@ -27,7 +25,9 @@ export default class InvitationsList extends Component {
                             invitations &&
                             invitations.length === 0 &&
                             <Text style={ {
-                                marginLeft: 20
+                                marginLeft  : 20,
+                                marginTop   : 20,
+                                marginBottom: 20,
                             } }>
                                 You have no pending invitations...
                             </Text>

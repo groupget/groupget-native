@@ -15,6 +15,8 @@ import UserPool from '../../constants/UserPool';
 import refreshTokens from '../../utils/refreshTokens';
 import saveRefreshToken from '../../utils/saveRefreshToken';
 import saveMainToken from '../../utils/saveMainToken';
+import fetchMainToken from '../../utils/fetchMainToken';
+import fetchRefreshToken from '../../utils/fetchRefreshToken';
 
 const BUTTONS = ['Delete', 'Cancel'];
 const DESTRUCTIVE_INDEX = 0;
@@ -136,17 +138,9 @@ export default class GroupsList extends Component {
         this.setState({ [fieldName]: text })
     };
 
-    _addGroup = () => {
-        const { user } = this.state;
-
-        user.getSession((err, session) => {
-            if (err) {
-                alert(err.message || JSON.stringify(err));
-                return;
-            }
-            const token = session.getRefreshToken().getToken();
+    _addGroup = async () => {
+            const token = await fetchMainToken();
             this._addGroupWithToken(token);
-        });
     };
 
     _addGroupWithToken = (token) => {
@@ -163,11 +157,12 @@ export default class GroupsList extends Component {
                 'usernames'  : [user.username]
             })
         })
-            .then((result) => {
+            .then(async (result) => {
                 console.log('result from add group with token: ', result);
                 if (result.ok === true) {
+                    const refreshToken = await fetchRefreshToken();
                     this.props.updateGroupsWithNew(name);
-                    refreshTokens(token)
+                    refreshTokens(refreshToken)
                         .then(async tokens => {
                             await saveRefreshToken(tokens.refreshToken);
                             await saveMainToken(tokens.mainToken);

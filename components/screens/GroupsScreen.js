@@ -37,6 +37,7 @@ export default class GroupsScreen extends React.Component {
                 'Authorization': 'Bearer ' + jwtToken,
             }),
         })
+            .then(response => response.json())
             .then(async (data) => {
                 console.log('\n\ndata fetched for invitations: ', data);
                 const refreshToken = await fetchRefreshToken();
@@ -101,11 +102,12 @@ export default class GroupsScreen extends React.Component {
                     .then(async tokens => {
                         await saveRefreshToken(tokens.refreshToken);
                         await saveMainToken(tokens.mainToken);
+                        await this.declineInvitation(invitation);
                     });
             })
             .catch((err) => {
                 alert(err.message || JSON.stringify(err));
-                console.log('err');
+                console.log('err accept invitation');
             })
     };
 

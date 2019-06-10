@@ -4,15 +4,10 @@ import { Container, Header, Content, Card, CardItem, Left, Body, Switch } from '
 import Icon from '../common/Icon';
 import MarginContent from '../common/MarginContent';
 import Button from '../common/Button';
-import cognitoConfig from '../../config/cognitoConfig';
-import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
+import fetchMainToken from '../../utils/fetchMainToken';
+import jwtDecode from 'jwt-decode';
+import UserPool from '../../constants/UserPool';
 
-
-const account = {
-    username     : 'irmikrys',
-    email        : 'irmikrys@student.agh.edu.pl',
-    notifications: true,
-};
 
 export default class SettingsScreen extends React.Component {
     static navigationOptions = {
@@ -20,18 +15,20 @@ export default class SettingsScreen extends React.Component {
     };
 
     state = {
-        notifications: account.notifications,
-        user         : null,
+        notifications: true,
+        username     : '',
+        email        : '',
+        user         : null
     };
 
-    componentDidMount() {
-        this._fetchUser();
+    async componentDidMount() {
+        await this._fetchUser();
     }
 
     render() {
 
-        const { username, email } = account;
-        const { notifications } = this.state;
+        console.log('user for settings:', this.state.user);
+        const { username, email, notifications } = this.state;
 
         return (
             <Container>
@@ -75,17 +72,21 @@ export default class SettingsScreen extends React.Component {
         )
     }
 
-    _fetchUser = () => {
-        const poolData = {
-            UserPoolId: cognitoConfig.cognito.USER_POOL_ID,
-            ClientId  : cognitoConfig.cognito.APP_CLIENT_ID
-        };
-        let userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
-
-        userPool.storage.sync((err, result) => {
+    _fetchUser = async () => {
+        const token = await fetchMainToken();
+        try {
+            const decoded = jwtDecode(token);
+            this.setState({
+                username: decoded['cognito:username'],
+                email   : decoded.email
+            })
+        } catch (e) {
+            alert(e.message || JSON.stringify(e))
+        }
+        UserPool.storage.sync((err, result) => {
             if (err) {
             } else if (result === 'SUCCESS') {
-                const cognitoUser = userPool.getCurrentUser();
+                const cognitoUser = UserPool.getCurrentUser();
                 this.setState({ user: cognitoUser });
             }
         });

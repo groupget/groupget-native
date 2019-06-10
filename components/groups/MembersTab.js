@@ -10,6 +10,12 @@ import ActivitiesIcons from '../../constants/ActivitiesIcons';
 import MarginContent from '../common/MarginContent';
 import Title from '../common/Title';
 import TextInput from '../common/TextInput';
+import endpoints from '../../config/endpoints';
+import refreshTokens from '../../utils/refreshTokens';
+import saveRefreshToken from '../../utils/saveRefreshToken';
+import saveMainToken from '../../utils/saveMainToken';
+import fetchMainToken from '../../utils/fetchMainToken';
+import fetchRefreshToken from '../../utils/fetchRefreshToken';
 
 
 const members = [
@@ -38,14 +44,14 @@ export default class MembersTab extends Component {
     static navigationOptions = {};
 
     state = {
-        active : false,
-        clicked: -1,
-        email  : '',
+        active  : false,
+        clicked : -1,
+        username: '',
     };
 
     render() {
 
-        const { active, email } = this.state;
+        const { active, username } = this.state;
         const { members } = this.props;
 
         return (
@@ -88,9 +94,9 @@ export default class MembersTab extends Component {
                                 <Title text={ 'Send Invitation to Group' }/>
                                 <MarginContent>
                                     <Form>
-                                        <TextInput onChange={ this._handleInputChange('email') }
-                                                   placeholder={ 'Email' }
-                                                   value={ email }
+                                        <TextInput onChange={ this._handleInputChange('username') }
+                                                   placeholder={ 'Username' }
+                                                   value={ username }
                                         />
                                         <FormButton onClick={ this._sendInvitation }
                                                     text={ 'Send' }
@@ -126,16 +132,41 @@ export default class MembersTab extends Component {
 
     _onFabPress = () => {
         const { active } = this.state;
-        this.setState({ active: !active, email: '' })
+        this.setState({ active: !active, username: '' })
     };
 
     _handleInputChange = fieldName => text => {
         this.setState({ [fieldName]: text })
     };
 
-    _sendInvitation = () => {
-        const { active } = this.state;
-        this.setState({ active: !active, email: '' })
+    _sendInvitation = async () => {
+        const { active, username } = this.state;
+        const { groupName } = this.props;
+
+        const token = await fetchMainToken();
+        const refreshToken = await fetchRefreshToken();
+        fetch(endpoints.ACCOUNTS + `/groups/${ groupName }/invitations`, {
+            method : 'POST',
+            headers: new Headers({
+                'Authorization': 'Bearer ' + token,
+            }),
+            body   : JSON.stringify({
+                'username': username
+            })
+        })
+            .then((result) => {
+                console.log('result from send invitation: ', result);
+                refreshTokens(refreshToken)
+                    .then(async tokens => {
+                        await saveRefreshToken(tokens.refreshToken);
+                        await saveMainToken(tokens.mainToken);
+                    });
+                this.setState({ active: !active, username: '' })
+            })
+            .catch((err) => {
+                alert(err.message || JSON.stringify(err));
+                console.log('err send invitation');
+            });
     }
 
 }

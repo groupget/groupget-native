@@ -49,6 +49,8 @@ export default class GroupView extends React.Component {
     render() {
 
         const { members } = this.state;
+        const { navigation } = this.props;
+        const groupName = navigation.getParam('name', 'no name provided');
 
         return (
             <Container style={ styles.container }>
@@ -58,28 +60,34 @@ export default class GroupView extends React.Component {
                          activeTabStyle={ styles.activeTab }
                          activeTextStyle={ styles.activeTab }
                     >
-                        <MembersTab members={ members }/>
+                        <MembersTab members={ members }
+                                    groupName={ groupName }
+                        />
                     </Tab>
                     <Tab heading='LISTS'
                          tabStyle={ styles.tabContainer }
                          activeTabStyle={ styles.activeTab }
                          activeTextStyle={ styles.activeTab }
                     >
-                        <ListsTab navigation={ this.props.navigation }/>
+                        <ListsTab navigation={ this.props.navigation }
+                                  groupName={ groupName }
+                        />
                     </Tab>
                     <Tab heading='EXPENSES'
                          tabStyle={ styles.tabContainer }
                          activeTabStyle={ styles.activeTab }
                          activeTextStyle={ styles.activeTab }
                     >
-                        <ExpensesTab/>
+                        <ExpensesTab groupName={ groupName }
+                        />
                     </Tab>
                     <Tab heading='ACTIVITY'
                          tabStyle={ styles.tabContainer }
                          activeTabStyle={ styles.activeTab }
                          activeTextStyle={ styles.activeTab }
                     >
-                        <ActivityTab/>
+                        <ActivityTab groupName={ groupName }
+                        />
                     </Tab>
                 </Tabs>
             </Container>
