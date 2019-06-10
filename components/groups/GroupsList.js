@@ -170,7 +170,7 @@ export default class GroupsList extends Component {
         })
             .then(async (result) => {
                 console.log('result from add group with token: ', result);
-                if (result.ok === true) {
+                if (result.status === 200) {
                     const refreshToken = await fetchRefreshToken();
                     this.props.updateGroupsWithNew(name);
                     refreshTokens(refreshToken)
@@ -178,13 +178,17 @@ export default class GroupsList extends Component {
                             await saveRefreshToken(tokens.refreshToken);
                             await saveMainToken(tokens.mainToken);
                         });
+                    this.setState({ active: !active, name: '', description: '' })
+                } else {
+                    const j = await result.json();
+                    const m = j.message;
+                    alert(m)
                 }
             })
             .catch((err) => {
                 alert(err.message || JSON.stringify(err));
                 console.log('err');
             });
-        this.setState({ active: !active, name: '', description: '' })
     };
 
     _fetchUser = () => {
