@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.grayLightest,
     },
     marginRight: {
-        marginRight: 10
+        marginRight: 20
     },
     badge      : {
         marginTop: 4

@@ -91,6 +91,7 @@ export default class GroupView extends React.Component {
                             planningClient ? <ApolloProvider client={ planningClient }>
                                 <ListsTab navigation={ this.props.navigation }
                                           groupName={ groupName }
+                                          client={planningClient}
                                 />
                             </ApolloProvider> : <Text>Loading...</Text>
                         }

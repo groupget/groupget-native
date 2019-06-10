@@ -24,6 +24,7 @@ const FETCH_ALL_LISTS = gql`
         title
         description
         createdAt
+        id
       }
   }
 `;
@@ -62,7 +63,7 @@ export default class ListsTab extends Component {
                                         {
                                             lists.map((list, key) => <ListItem
                                                 key={ key }
-                                                onPress={ this._showItems }
+                                                onPress={ () => this._showItems(list) }
                                                 content={ `${ list.title } - ${ list.description }` }
                                                 menu={
                                                     <NativeButton transparent
@@ -113,8 +114,10 @@ export default class ListsTab extends Component {
                                         </Container>
                                     </Modal>
                                 </View>
-                            </Container>)
-                    } }
+                            </Container>
+                        )
+                    }
+                }
             </Query>
         );
     }
@@ -147,8 +150,11 @@ export default class ListsTab extends Component {
         this.setState({ active: !active, name: '' })
     };
 
-    _showItems = () => {
-        this.props.navigation.push('ListItems');
+    _showItems = (list) => {
+        this.props.navigation.push('ListItems', {
+            listId: list.id,
+            client: this.props.client
+        });
     };
 
 }
