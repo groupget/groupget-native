@@ -58,13 +58,13 @@ export default class GroupsList extends Component {
                                 onPress={ () => this._onGroupPress(group) }
                                 content={ group }
                                 icon={ ActivitiesIcons.group }
-                                menu={
-                                    <Button transparent
-                                            onPress={ () => this._onMenuPress(group) }
-                                    >
-                                        <Icon name={ 'more' }/>
-                                    </Button>
-                                }
+                                // menu={
+                                //     <Button transparent
+                                //             onPress={ () => this._onMenuPress(group) }
+                                //     >
+                                //         <Icon name={ 'more' }/>
+                                //     </Button>
+                                // }
                             />)
                         }
                     </List>
