@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Modal } from 'react-native';
 import { Container, List, Button, Fab, ActionSheet, Form, Text, ListItem as NativeListItem } from 'native-base';
+import jwtDecode from 'jwt-decode';
 
 import FormButton from '../common/Button'
 import ListItem from '../common/ListItem';
@@ -139,12 +140,21 @@ export default class GroupsList extends Component {
     };
 
     _addGroup = async () => {
-            const token = await fetchMainToken();
-            this._addGroupWithToken(token);
+        const token = await fetchMainToken();
+        await this._addGroupWithToken(token);
     };
 
-    _addGroupWithToken = (token) => {
+    _addGroupWithToken = async (token) => {
         const { active, name, description, user } = this.state;
+
+        let username = '';
+        const mainToken = await fetchMainToken();
+
+        try {
+            username = jwtDecode(mainToken).email;
+        } catch (e) {
+            console.log('error decode add group', e);
+        }
 
         fetch(endpoints.ACCOUNTS + `/groups`, {
             method : 'POST',
@@ -154,7 +164,7 @@ export default class GroupsList extends Component {
             body   : JSON.stringify({
                 'description': description,
                 'groupName'  : name,
-                'usernames'  : [user.username]
+                'usernames'  : [username]
             })
         })
             .then(async (result) => {

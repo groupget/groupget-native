@@ -95,7 +95,7 @@ export default class MembersTab extends Component {
                                 <MarginContent>
                                     <Form>
                                         <TextInput onChange={ this._handleInputChange('username') }
-                                                   placeholder={ 'Username' }
+                                                   placeholder={ 'Email' }
                                                    value={ username }
                                         />
                                         <FormButton onClick={ this._sendInvitation }
@@ -142,6 +142,7 @@ export default class MembersTab extends Component {
     _sendInvitation = async () => {
         const { active, username } = this.state;
         const { groupName } = this.props;
+        console.log('group name to send invitation', groupName);
 
         const token = await fetchMainToken();
         const refreshToken = await fetchRefreshToken();
