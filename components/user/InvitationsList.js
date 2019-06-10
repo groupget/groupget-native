@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { Container, List, Button, Text, ListItem as NativeListItem } from 'native-base';
 
 import ListItem from '../common/ListItem';
@@ -17,6 +17,7 @@ export default class InvitationsList extends Component {
         return (
             <Container style={ styles.container }>
                 <View style={ { flex: 1 } }>
+                    <ScrollView>
                     <List>
                         <NativeListItem itemHeader first>
                             <Text>INVITATIONS</Text>
@@ -65,6 +66,7 @@ export default class InvitationsList extends Component {
                             />)
                         }
                     </List>
+                    </ScrollView>
                 </View>
             </Container>
         );

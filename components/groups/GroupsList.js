@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Modal } from 'react-native';
+import { View, StyleSheet, Modal , ScrollView} from 'react-native';
 import { Container, List, Button, Fab, ActionSheet, Form, Text, ListItem as NativeListItem } from 'native-base';
 import jwtDecode from 'jwt-decode';
 
@@ -47,6 +47,7 @@ export default class GroupsList extends Component {
         return (
             <Container style={ styles.container }>
                 <View style={ { flex: 1 } }>
+                    <ScrollView>
                     <List>
                         <NativeListItem itemHeader first>
                             <Text>GROUPS</Text>
@@ -67,6 +68,7 @@ export default class GroupsList extends Component {
                             />)
                         }
                     </List>
+                    </ScrollView>
                     <Fab active={ active }
                          direction='up'
                          containerStyle={ {} }
