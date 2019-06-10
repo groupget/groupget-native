@@ -161,6 +161,7 @@ export default class GroupsList extends Component {
             headers: new Headers({
                 'Authorization': 'Bearer ' + token,
                 Accept         : 'application/json',
+                'Content-Type' : 'application/json',
             }),
             body   : JSON.stringify({
                 description: description,

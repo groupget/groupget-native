@@ -95,6 +95,7 @@ export default class GroupsScreen extends React.Component {
             headers: new Headers({
                 'Authorization': 'Bearer ' + token,
                 Accept         : 'application/json',
+                'Content-Type' : 'application/json',
             }),
         })
             .then((result) => {
@@ -105,6 +106,10 @@ export default class GroupsScreen extends React.Component {
                         await saveMainToken(tokens.mainToken);
                         await this.declineInvitation(invitation);
                     });
+                if (result.status === 200) {
+                    this.updateGroupsWithNew(invitation);
+                    this.updateInvitationsOnDelete(invitation);
+                }
             })
             .catch((err) => {
                 alert(err.message || JSON.stringify(err));
@@ -129,6 +134,9 @@ export default class GroupsScreen extends React.Component {
                         await saveRefreshToken(tokens.refreshToken);
                         await saveMainToken(tokens.mainToken);
                     });
+                if (result.status === 200) {
+                    this.updateInvitationsOnDelete(invitation);
+                }
             })
             .catch((err) => {
                 alert(err.message || JSON.stringify(err));
@@ -138,6 +146,10 @@ export default class GroupsScreen extends React.Component {
 
     updateGroupsWithNew = (name) => {
         this.setState((prevState) => ({ groups: [...prevState.groups, name] }))
+    };
+
+    updateInvitationsOnDelete = (name) => {
+        this.setState((prevState) => ({ invitations: prevState.invitations.filter(n => n !== name) }))
     };
 }
 

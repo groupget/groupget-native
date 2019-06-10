@@ -150,6 +150,8 @@ export default class MembersTab extends Component {
             method : 'POST',
             headers: new Headers({
                 'Authorization': 'Bearer ' + token,
+                Accept         : 'application/json',
+                'Content-Type' : 'application/json',
             }),
             body   : JSON.stringify({
                 username: username
