@@ -152,7 +152,7 @@ export default class MembersTab extends Component {
                 'Authorization': 'Bearer ' + token,
             }),
             body   : JSON.stringify({
-                'username': username
+                username: username
             })
         })
             .then((result) => {

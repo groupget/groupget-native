@@ -43,7 +43,7 @@ export default class GroupsScreen extends React.Component {
                 const refreshToken = await fetchRefreshToken();
                 await refreshTokens(refreshToken)
                     .then(async tokens => {
-                        console.log("tokens", tokens);
+                        console.log('tokens', tokens);
                         await saveRefreshToken(tokens.refreshToken);
                         await saveMainToken(tokens.mainToken);
                     });
@@ -94,6 +94,7 @@ export default class GroupsScreen extends React.Component {
             method : 'POST',
             headers: new Headers({
                 'Authorization': 'Bearer ' + token,
+                Accept         : 'application/json',
             }),
         })
             .then((result) => {

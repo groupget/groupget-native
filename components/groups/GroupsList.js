@@ -160,11 +160,12 @@ export default class GroupsList extends Component {
             method : 'POST',
             headers: new Headers({
                 'Authorization': 'Bearer ' + token,
+                Accept         : 'application/json',
             }),
             body   : JSON.stringify({
-                'description': description,
-                'groupName'  : name,
-                'usernames'  : [username]
+                description: description,
+                groupName  : name,
+                usernames  : [username]
             })
         })
             .then(async (result) => {

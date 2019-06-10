@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { Container, Tab, Tabs } from 'native-base';
+import { Container, Tab, Tabs, Text } from 'native-base';
 import MembersTab from './MembersTab';
 import ListsTab from './ListsTab';
 import ExpensesTab from './ExpensesTab';
@@ -11,6 +11,8 @@ import refreshTokens from '../../utils/refreshTokens';
 import saveRefreshToken from '../../utils/saveRefreshToken';
 import saveMainToken from '../../utils/saveMainToken';
 import fetchRefreshToken from '../../utils/fetchRefreshToken';
+import { ApolloProvider } from 'react-apollo';
+import { createBudgetApolloClient, createPlanningApolloClient } from '../../utils/apollo';
 
 export default class GroupView extends React.Component {
     static navigationOptions = {
@@ -18,7 +20,10 @@ export default class GroupView extends React.Component {
     };
 
     state = {
-        members: [],
+        members       : [],
+        token         : '',
+        budgetClient  : null,
+        planningClient: null,
     };
 
     async componentDidMount() {
@@ -27,6 +32,13 @@ export default class GroupView extends React.Component {
 
         const token = await fetchMainToken();
         const refreshToken = await fetchRefreshToken();
+        const budgetClient = createBudgetApolloClient(token);
+        const planningClient = createPlanningApolloClient(token);
+
+        this.setState({ token });
+        this.setState({ budgetClient });
+        this.setState({ planningClient });
+
         fetch(`${ endpoints.ACCOUNTS }/groups/${ groupName }`, {
             headers: new Headers({
                 'Authorization': 'Bearer ' + token,
@@ -39,6 +51,7 @@ export default class GroupView extends React.Component {
                     .then(tokens => {
                         saveRefreshToken(tokens.refreshToken);
                         saveMainToken(tokens.mainToken);
+                        this.setState({ token: tokens.mainToken });
                     });
             })
             .catch(err => {
@@ -48,7 +61,7 @@ export default class GroupView extends React.Component {
 
     render() {
 
-        const { members } = this.state;
+        const { members, planningClient, budgetClient } = this.state;
         const { navigation } = this.props;
         const groupName = navigation.getParam('name', 'no name provided');
 
@@ -60,9 +73,14 @@ export default class GroupView extends React.Component {
                          activeTabStyle={ styles.activeTab }
                          activeTextStyle={ styles.activeTab }
                     >
-                        <MembersTab members={ members }
-                                    groupName={ groupName }
-                        />
+                        {
+                            budgetClient ? <ApolloProvider client={ budgetClient }>
+                                <MembersTab members={ members }
+                                            groupName={ groupName }
+                                />
+                            </ApolloProvider> : <Text>Loading...</Text>
+                        }
+
                     </Tab>
                     <Tab heading='LISTS'
                          tabStyle={ styles.tabContainer }
