@@ -77,6 +77,7 @@ export default class GroupView extends React.Component {
                             budgetClient ? <ApolloProvider client={ budgetClient }>
                                 <MembersTab members={ members }
                                             groupName={ groupName }
+                                            updateUsersOnDelete={ this.updateUsersOnDelete }
                                 />
                             </ApolloProvider> : <Text>Loading...</Text>
                         }
@@ -91,7 +92,7 @@ export default class GroupView extends React.Component {
                             planningClient ? <ApolloProvider client={ planningClient }>
                                 <ListsTab navigation={ this.props.navigation }
                                           groupName={ groupName }
-                                          client={planningClient}
+                                          client={ planningClient }
                                 />
                             </ApolloProvider> : <Text>Loading...</Text>
                         }
@@ -109,17 +110,23 @@ export default class GroupView extends React.Component {
                             </ApolloProvider> : <Text>Loading...</Text>
                         }
                     </Tab>
-                    {/*<Tab heading='ACTIVITY'*/}
-                         {/*tabStyle={ styles.tabContainer }*/}
-                         {/*activeTabStyle={ styles.activeTab }*/}
-                         {/*activeTextStyle={ styles.activeTab }*/}
-                    {/*>*/}
-                        {/*<ActivityTab groupName={ groupName }*/}
-                        {/*/>*/}
-                    {/*</Tab>*/}
+                    {/*<Tab heading='ACTIVITY'*/ }
+                    {/*tabStyle={ styles.tabContainer }*/ }
+                    {/*activeTabStyle={ styles.activeTab }*/ }
+                    {/*activeTextStyle={ styles.activeTab }*/ }
+                    {/*>*/ }
+                    {/*<ActivityTab groupName={ groupName }*/ }
+                    {/*/>*/ }
+                    {/*</Tab>*/ }
                 </Tabs>
             </Container>
         );
+    }
+
+    updateUsersOnDelete = (group, member) => {
+        this.setState((prevState => (
+            { members: prevState.members.filter(memberName => memberName !== member) }
+        )));
     }
 }
 
