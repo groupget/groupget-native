@@ -23,9 +23,9 @@ const BUTTONS = ['Delete', 'Cancel'];
 const DESTRUCTIVE_INDEX = 0;
 const CANCEL_INDEX = 1;
 
-const FETCH_MEMBERS_EXPENSES = (name) => gql`
-  query { 
-      getUserTotalExpenses(groupId: ${ name }) {
+const FETCH_MEMBERS_EXPENSES = gql`
+  query Expenses($groupId: String!){ 
+      getUserTotalExpenses(groupId: $groupId) {
         _id
         totalAmount
       }
@@ -48,7 +48,10 @@ export default class MembersTab extends Component {
         const { members, groupName } = this.props;
 
         return (
-            <Query query={ FETCH_MEMBERS_EXPENSES(groupName) }
+            <Query query={ FETCH_MEMBERS_EXPENSES }
+                   variables={ {
+                       groupId: groupName
+                   } }
             >
                 {
                     ({ data, error, loading }) => {
